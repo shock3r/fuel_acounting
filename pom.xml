@@ -26,13 +26,26 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--Project modules-->
             <dependency>
                 <groupId>com.epam.brest.courses</groupId>
                 <artifactId>fuel-accounting-dao</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.epam.brest.courses</groupId>
+                <artifactId>fuel-accounting-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.epam.brest.courses</groupId>
+                <artifactId>fuel-accounting-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
 
     </dependencies>
