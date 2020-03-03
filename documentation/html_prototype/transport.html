@@ -37,32 +37,51 @@
     </nav>
 </header>
 
-<section>
-    <form>
-        <div>
-            <label for="field_transportName">Name</label>
-            <input id="field_transportName" type="text">
+<section id="transport">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_transportName">Name</label>
+                                <input class="form-control" id="field_transportName" type="text">
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_fuelType">Fuel type</label>
+                                <select class="form-control" id="field_fuelType">
+                                    <option value="0">Gasoline</option>
+                                    <option value="1">Diesel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_fuelTankCapasity">Fuel tank capasity</label>
+                                <input class="form-control" id="field_fuelTankCapasity" type="number" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_transportDate">Date</label>
+                                <input class="form-control" id="field_transportDate" type="date">
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a href="transports.html"
+                                   class="btn btn-light mr-1"
+                                   title="Cancel"data-toggle="tooltip"
+                                   data-placement="top">Cancel</a>
+                                <a href="transports.html"
+                                   class="btn btn-primary"
+                                   title="Save transport"data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="d-none d-sm-inline fa fa-save"></i> Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="field_fuelType">Fuel type</label>
-            <select id="field_fuelType">
-                <option value="0">Gasoline</option>
-                <option value="1">Diesel</option>
-            </select>
-        </div>
-        <div>
-            <label for="field_fuelTankCapasity">Fuel tank capasity</label>
-            <input id="field_fuelTankCapasity" type="number" value="0">
-        </div>
-        <div>
-            <label for="field_transportDate">Date</label>
-            <input id="field_transportDate" type="date">
-        </div>
-        <div>
-            <a href="transports.html">Cancel</a>
-            <a href="transports.html">Save</a>
-        </div>
-    </form>
+    </div>
 </section>
 
 <footer>
