@@ -39,31 +39,76 @@
     </nav>
 </header>
 
-<section>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Gasoline</td>
-            <td>200</td>
-            <td><a href="fuel.html">Edit</a></td>
-            <td><a href="#">Delete</a></td>
-        </tr>
-        <tr>
-            <td>Disel</td>
-            <td>300</td>
-            <td><a href="fuel.html">Edit</a></td>
-            <td><a href="#">Delete</a></td>
-        </tr>
-        </tbody>
-    </table>
+<section id="fuels">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Gasoline</td>
+                            <td>200</td>
+                            <td class="text-right">
+                                <a href="fuel.html"
+                                   class="btn-sm btn-outline-secondary"
+                                   title="Edit fuel"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-pencil"></i>
+                                    <span class="d-none d-md-inline">Edit</span>
+                                </a>
+                            </td>
+                            <td class="text-left">
+                                <a href="#"
+                                   class="btn-sm btn-outline-secondary"
+                                   title="Delete fuel"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-remove"></i>
+                                    <span class="d-none d-md-inline">Delete</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Diesel</td>
+                            <td>300</td>
+                            <td class="text-right">
+                                <a href="fuel.html"
+                                   class="btn-sm btn-outline-secondary"
+                                   title="Edit fuel"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-pencil"></i>
+                                    <span class="d-none d-md-inline">Edit</span>
+                                </a>
+                            </td>
+                            <td class="text-left">
+                                <a href="#"
+                                   class="btn-sm btn-outline-secondary"
+                                   title="Delete fuel"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-remove"></i>
+                                    <span class="d-none d-md-inline">Delete</span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <footer>
