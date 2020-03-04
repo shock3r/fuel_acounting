@@ -1,5 +1,6 @@
+package com.epam.brest.courses.model;
+
 import java.util.Date;
-import java.util.Objects;
 
 public class Transport {
     private Integer transportId;
@@ -59,20 +60,4 @@ public class Transport {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Transport transport = (Transport) o;
-        return transportId.equals(transport.transportId) &&
-                transportName.equals(transport.transportName) &&
-                fuelId.equals(transport.fuelId) &&
-                fuelTankCapasity.equals(transport.fuelTankCapasity) &&
-                date.equals(transport.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(transportId, transportName, fuelId, fuelTankCapasity, date);
-    }
 }
