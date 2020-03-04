@@ -1,20 +1,12 @@
--- Drop tables
 drop table if exists transport;
 drop table if exists fuel;
 
--- Schema fuel_accounting
-DROP SCHEMA IF EXISTS fuel_accounting;
-CREATE SCHEMA fuel_accounting;
-USE fuel_accounting;
-
--- fuel
 CREATE TABLE fuel (
   fuel_id   INTEGER NOT NULL AUTO_INCREMENT,
   fuel_name VARCHAR(30) NOT NULL,
   PRIMARY KEY (fuel_id)
 );
 
--- transport
 CREATE TABLE transport (
   transport_id    INTEGER NOT NULL AUTO_INCREMENT,
   transport_name VARCHAR(30) NOT NULL,
