@@ -1,4 +1,4 @@
-import java.util.Objects;
+package com.epam.brest.courses.model;
 
 public class Fuel {
     private Integer fuelId;
@@ -26,19 +26,5 @@ public class Fuel {
                 "fuelId=" + fuelId +
                 ", fuelName='" + fuelName + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Fuel fuel = (Fuel) o;
-        return fuelId.equals(fuel.fuelId) &&
-                fuelName.equals(fuel.fuelName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fuelId, fuelName);
     }
 }
