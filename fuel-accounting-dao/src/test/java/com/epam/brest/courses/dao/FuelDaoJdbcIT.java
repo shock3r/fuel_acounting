@@ -75,7 +75,7 @@ public class FuelDaoJdbcIT {
         Optional<Fuel> updatedFuelOptional = fuelDao.findById(id);
         Assertions.assertTrue(updatedFuelOptional.isPresent());
         assertEquals(updatedFuelOptional.get().getFuelId(), id);
-        assertNotEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
+        assertEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
     }
 
     @Test
@@ -99,6 +99,7 @@ public class FuelDaoJdbcIT {
         assertNotNull(currentFuels);
 
         assertTrue(fuels.size()-1 == currentFuels.size());
+
 
     }
 }
