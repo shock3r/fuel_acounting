@@ -27,13 +27,11 @@
         </encoder>
     </appender>
 
-    <logger name="com.epam.brest.courses.*" level="INFO">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
+    <logger name="com.epam.brest.courses.*" level="DEBUG">
         <appender-ref ref="ROLLINGFILE"/>
     </logger>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </root>
 

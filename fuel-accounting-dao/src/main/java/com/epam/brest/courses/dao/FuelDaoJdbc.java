@@ -10,20 +10,28 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import static com.epam.brest.courses.constants.FuelConstants.COLUMN_FUEL_ID;
-import static com.epam.brest.courses.constants.FuelConstants.COLUMN_FUEL_NAME;
+import static com.epam.brest.courses.constants.FuelConstants.*;
 
 public class FuelDaoJdbc implements FuelDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FuelDaoJdbc.class);
     @Value("${fuel.select}")
     private String selectSql;
+    @Value("${fuel.create}")
     private String createSql;
+    @Value("${fuel.update}")
     private String updateSql;
+    @Value("${fuel.delete}")
     private String deleteSql;
+    @Value("${fuel.findById}")
     private String findByIdSql;
 
     private final FuelRowMapper fuelRowMapper = new FuelRowMapper();
@@ -35,18 +43,27 @@ public class FuelDaoJdbc implements FuelDao {
 
     @Override
     public List<Fuel> findAll() {
-        LOGGER.trace("findAll()");
-        return namedParameterJdbcTemplate.query(selectSql,fuelRowMapper);
+        LOGGER.debug("findAll()");
+        return namedParameterJdbcTemplate.query(selectSql, fuelRowMapper);
     }
 
     @Override
     public Optional<Fuel> findById(Integer fuelId) {
-        return Optional.empty();
+        LOGGER.debug("findById(id:{})", fuelId);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(FUEL_ID, fuelId);
+        List<Fuel> fuelList = namedParameterJdbcTemplate.query(findByIdSql, sqlParameterSource, fuelRowMapper);
+        return Optional.ofNullable(DataAccessUtils.uniqueResult(fuelList));
     }
 
     @Override
     public Integer create(Fuel fuel) {
-        return null;
+        LOGGER.debug("create(fuel:{})", fuel);
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue(FUEL_ID, fuel.getFuelId());
+        mapSqlParameterSource.addValue(FUEL_NAME, fuel.getFuelName());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createSql, mapSqlParameterSource,keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     @Override

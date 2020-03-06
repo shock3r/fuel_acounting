@@ -8,16 +8,18 @@ public class Fuel {
         return fuelId;
     }
 
-    public void setFuelId(Integer fuelId) {
+    public Fuel setFuelId(Integer fuelId) {
         this.fuelId = fuelId;
+        return this;
     }
 
     public String getFuelName() {
         return fuelName;
     }
 
-    public void setFuelName(String fuelName) {
+    public Fuel setFuelName(String fuelName) {
         this.fuelName = fuelName;
+        return this;
     }
 
     @Override

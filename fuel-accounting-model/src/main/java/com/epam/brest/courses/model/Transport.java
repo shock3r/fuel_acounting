@@ -13,40 +13,45 @@ public class Transport {
         return transportId;
     }
 
-    public void setTransportId(Integer transportId) {
+    public Transport setTransportId(Integer transportId) {
         this.transportId = transportId;
+        return this;
     }
 
     public String getTransportName() {
         return transportName;
     }
 
-    public void setTransportName(String transportName) {
+    public Transport setTransportName(String transportName) {
         this.transportName = transportName;
+        return this;
     }
 
     public Integer getFuelId() {
         return fuelId;
     }
 
-    public void setFuelId(Integer fuelId) {
+    public Transport setFuelId(Integer fuelId) {
         this.fuelId = fuelId;
+        return this;
     }
 
     public Double getFuelTankCapasity() {
         return fuelTankCapasity;
     }
 
-    public void setFuelTankCapasity(Double fuelTankCapasity) {
+    public Transport setFuelTankCapasity(Double fuelTankCapasity) {
         this.fuelTankCapasity = fuelTankCapasity;
+        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public Transport setDate(Date date) {
         this.date = date;
+        return this;
     }
 
     @Override
