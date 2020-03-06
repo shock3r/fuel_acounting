@@ -21,7 +21,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
-
+/**
+ * FUEL DAO JDBC implementation.
+ */
 public class FuelDaoJdbc implements FuelDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FuelDaoJdbc.class);
@@ -94,4 +96,5 @@ public class FuelDaoJdbc implements FuelDao {
             return fuel;
         }
     }
+
 }

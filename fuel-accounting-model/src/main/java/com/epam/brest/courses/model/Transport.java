@@ -6,8 +6,8 @@ public class Transport {
     private Integer transportId;
     private String transportName;
     private Integer fuelId;
-    private Double fuelTankCapasity;
-    private Date date;
+    private Double transportFuelTankCapasity;
+    private Date transportDate;
 
     public Integer getTransportId() {
         return transportId;
@@ -36,21 +36,21 @@ public class Transport {
         return this;
     }
 
-    public Double getFuelTankCapasity() {
-        return fuelTankCapasity;
+    public Double getTransportFuelTankCapasity() {
+        return transportFuelTankCapasity;
     }
 
-    public Transport setFuelTankCapasity(Double fuelTankCapasity) {
-        this.fuelTankCapasity = fuelTankCapasity;
+    public Transport setTransportFuelTankCapasity(Double transportFuelTankCapasity) {
+        this.transportFuelTankCapasity = transportFuelTankCapasity;
         return this;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getTransportDate() {
+        return transportDate;
     }
 
-    public Transport setDate(Date date) {
-        this.date = date;
+    public Transport setTransportDate(Date transportDate) {
+        this.transportDate = transportDate;
         return this;
     }
 
@@ -60,9 +60,8 @@ public class Transport {
                 "transportId=" + transportId +
                 ", transportName='" + transportName + '\'' +
                 ", fuelId=" + fuelId +
-                ", fuelTankCapasity=" + fuelTankCapasity +
-                ", date=" + date +
+                ", transportFuelTankCapasity=" + transportFuelTankCapasity +
+                ", transportDate=" + transportDate +
                 '}';
     }
-
 }
