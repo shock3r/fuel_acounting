@@ -7,7 +7,9 @@
     <bean id="fuelDao" class="com.epam.brest.courses.dao.FuelDaoJdbc">
         <constructor-arg ref="jdbcTemplate"/>
     </bean>
-
+    <bean id="transportDao" class="com.epam.brest.courses.dao.TransportDaoJdbc">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg ref="dataSource"/>
     </bean>

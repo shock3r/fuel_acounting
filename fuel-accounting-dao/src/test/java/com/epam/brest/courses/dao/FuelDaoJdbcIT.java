@@ -19,8 +19,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
 public class FuelDaoJdbcIT {
 
+    private final FuelDao fuelDao;
+
     @Autowired
-    private FuelDao fuelDao;
+    public FuelDaoJdbcIT(FuelDao fuelDao) {
+        this.fuelDao = fuelDao;
+    }
 
     @Test
     public void shoulFindAllFuels() {

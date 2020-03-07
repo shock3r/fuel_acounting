@@ -21,6 +21,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
+
 /**
  * FUEL DAO JDBC implementation.
  */
