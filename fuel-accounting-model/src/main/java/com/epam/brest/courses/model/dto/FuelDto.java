@@ -3,7 +3,7 @@ package com.epam.brest.courses.model.dto;
 import com.epam.brest.courses.model.Fuel;
 
 /**
- * POJO Fuel for model.
+ * POJO FuelDto for model.
  */
 public class FuelDto {
 

@@ -16,4 +16,7 @@ public class TransportConstants {
 
     public static final int TRANSPORT_NAME_SIZE = 30;
 
+    public static final String DATE_FROM = "dateFrom";
+    public static final String DATE_TO = "dateTo";
+
 }

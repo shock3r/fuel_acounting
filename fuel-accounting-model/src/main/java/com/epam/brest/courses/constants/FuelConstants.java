@@ -9,5 +9,4 @@ public class FuelConstants {
 
     public static final int FUEL_NAME_SIZE = 30;
 
-
 }

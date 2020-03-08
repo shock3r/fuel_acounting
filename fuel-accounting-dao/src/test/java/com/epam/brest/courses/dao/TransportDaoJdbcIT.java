@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,21 +29,61 @@ public class TransportDaoJdbcIT {
     }
 
     @Test
-    public void shoulFindAllTransportss() {
+    public void shoulFindAllTransports() {
         List<Transport> transports = transportDao.findAll();
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
 
+    private Date getDateByString(String dateAsString) {
+        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return dateformat.parse(dateAsString);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     @Test
-    public void shouldFindTransportsByFuilId(){
+    public void shouldFindAllTransportsInValueFromToDate() {
+        // given
+        Date dateFrom = getDateByString("01/03/2020");
+        Transport transport1 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateFrom);
+
+        Integer id1 = transportDao.create(transport1);
+        assertNotNull(id1);
+
+        Date dateTransport2 = getDateByString("02/03/2020");
+        Transport transport2 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateTransport2);
+
+        Integer id2 = transportDao.create(transport2);
+        assertNotNull(id2);
+        Date dateTo = getDateByString("08/03/2020");
+
+        // when
+        List<Transport> transports = transportDao.findAllFromDateToDate(dateFrom, dateTo);
+        // then
+        assertNotNull(transports);
+        assertTrue(2 == transports.size());
+    }
+
+    @Test
+    public void shouldFindTransportsByFuilId() {
         List<Transport> transports = transportDao.findByFuelId(1);
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
 
     @Test
-    public void shouldFindTransportById(){
+    public void shouldFindTransportById() {
 
         // given
         Transport transport = new Transport()
@@ -81,7 +122,7 @@ public class TransportDaoJdbcIT {
     }
 
     @Test
-    public void shouldCreateTransport(){
+    public void shouldCreateTransport() {
 
         Transport transport = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
@@ -94,7 +135,7 @@ public class TransportDaoJdbcIT {
     }
 
     @Test
-    public void shouldUpdateTransport(){
+    public void shouldUpdateTransport() {
 
         // given
         Transport transport = new Transport()
@@ -123,7 +164,7 @@ public class TransportDaoJdbcIT {
     }
 
     @Test
-    public void shouldDeleteTransport(){
+    public void shouldDeleteTransport() {
 
         // given
         Transport transport = new Transport()
@@ -145,12 +186,7 @@ public class TransportDaoJdbcIT {
 
         List<Transport> currentTransports = transportDao.findAll();
         assertNotNull(currentTransports);
-        assertEquals(transports.size()-1, currentTransports.size());
-
+        assertEquals(transports.size() - 1, currentTransports.size());
 
     }
-
-
-
-
 }

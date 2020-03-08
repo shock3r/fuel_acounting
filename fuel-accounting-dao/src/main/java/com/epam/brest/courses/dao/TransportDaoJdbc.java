@@ -1,6 +1,7 @@
 package com.epam.brest.courses.dao;
 
 
+import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.Transport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.Types;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_ID;
 import static com.epam.brest.courses.constants.TransportConstants.*;
 
 /**
@@ -28,6 +32,8 @@ public class TransportDaoJdbc implements TransportDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Value("${transport.findAll}")
     private String findAll;
+    @Value("${transport.findAllFromDateToDate}")
+    private String findAllFromDateToDate;
     @Value("${transport.findAllByFuelId}")
     private String findAllByFuelId;
     @Value("${transport.findById}")
@@ -45,12 +51,26 @@ public class TransportDaoJdbc implements TransportDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-
     @Override
     public List<Transport> findAll() {
         LOGGER.debug("findAll()");
         List<Transport> transports =
                 namedParameterJdbcTemplate.query(findAll, BeanPropertyRowMapper.newInstance(Transport.class));
+        return transports;
+    }
+
+    @Override
+    public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
+        LOGGER.debug("findAllFromDateToDate(dateFrom:{}, dateTo:{})",dateFrom,dateTo);
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(dateFrom.getTime());
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue(DATE_FROM, dateFrom, Types.DATE);
+        namedParameters.addValue(DATE_TO, dateTo, Types.DATE);
+        SqlParameterSource sqlParameterSource = namedParameters;
+
+        List<Transport> transports =
+                namedParameterJdbcTemplate.query(findAllFromDateToDate, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
         return transports;
     }
 

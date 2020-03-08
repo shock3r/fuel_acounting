@@ -2,6 +2,7 @@ package com.epam.brest.courses.dao;
 
 import com.epam.brest.courses.model.Transport;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,14 @@ public interface TransportDao {
      * @return list of all transports.
      */
     List<Transport> findAll();
+
+    /**
+     * Get all transports that has transportDate field value in range from dateFrom to dateTo.
+     * @param dateFrom Date range from value.
+     * @param dateTo Date ranhe to value.
+     * @return List of all transport in range from to specific dates.
+     */
+    List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo);
 
     /**
      * Get all transports with specified fuel id.
