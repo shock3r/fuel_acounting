@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -88,11 +89,15 @@ public class TransportDaoJdbc implements TransportDao {
 
     @Override
     public int update(Transport transport) {
-        return 0;
+        LOGGER.debug("update(transport:{})", transport);
+        return namedParameterJdbcTemplate.update(updateSql, new BeanPropertySqlParameterSource(transport));
     }
 
     @Override
     public int delete(Integer transportId) {
-        return 0;
+        LOGGER.debug("delete(id:{})",transportId);
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue(TRANSPORT_ID, transportId);
+        return namedParameterJdbcTemplate.update(deleteSql, parameters);
     }
 }
