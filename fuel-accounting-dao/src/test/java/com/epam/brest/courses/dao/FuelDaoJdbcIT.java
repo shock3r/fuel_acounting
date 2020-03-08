@@ -19,8 +19,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
 public class FuelDaoJdbcIT {
 
+    private final FuelDao fuelDao;
+
     @Autowired
-    private FuelDao fuelDao;
+    public FuelDaoJdbcIT(FuelDao fuelDao) {
+        this.fuelDao = fuelDao;
+    }
 
     @Test
     public void shoulFindAllFuels() {
@@ -75,7 +79,7 @@ public class FuelDaoJdbcIT {
         Optional<Fuel> updatedFuelOptional = fuelDao.findById(id);
         Assertions.assertTrue(updatedFuelOptional.isPresent());
         assertEquals(updatedFuelOptional.get().getFuelId(), id);
-        assertNotEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
+        assertEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
     }
 
     @Test
@@ -99,6 +103,7 @@ public class FuelDaoJdbcIT {
         assertNotNull(currentFuels);
 
         assertTrue(fuels.size()-1 == currentFuels.size());
+
 
     }
 }

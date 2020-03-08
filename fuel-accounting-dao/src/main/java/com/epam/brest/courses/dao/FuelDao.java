@@ -5,19 +5,23 @@ import com.epam.brest.courses.model.Fuel;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * FUEL DAO JDBC interface.
+ */
 public interface FuelDao {
+
     /**
-     * Find all fuels.
+     * Get all fuels.
      *
-     * @return fuels list.
+     * @return list of all fuels.
      */
     List<Fuel> findAll();
 
     /**
-     * Find fuels by Id.
+     * Get all fuels wirh specified id.
      *
      * @param fuelId fuel Id.
-     * @return fuel
+     * @return fuel by id.
      */
     Optional<Fuel> findById(Integer fuelId);
 
@@ -41,7 +45,7 @@ public interface FuelDao {
      * delete fuel.
      *
      * @param fuelId fuel Id.
-     * @return number of deleted records.
+     * @return number of deleted records in database.
      */
     int delete(Integer fuelId);
 

@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,9 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
 
+/**
+ * FUEL DAO JDBC implementation.
+ */
 public class FuelDaoJdbc implements FuelDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FuelDaoJdbc.class);
@@ -68,12 +73,19 @@ public class FuelDaoJdbc implements FuelDao {
 
     @Override
     public int update(Fuel fuel) {
-        return 0;
+        LOGGER.debug("update(fuel:{})",fuel);
+        Map<String, Object> params = new HashMap<>();
+        params.put(FUEL_ID, fuel.getFuelId());
+        params.put(FUEL_NAME, fuel.getFuelName());
+        return namedParameterJdbcTemplate.update(updateSql, params);
     }
 
     @Override
     public int delete(Integer fuelId) {
-        return 0;
+        LOGGER.debug("delete(id:{})", fuelId);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(FUEL_ID, fuelId);
+        return namedParameterJdbcTemplate.update(deleteSql, params);
     }
 
     private class FuelRowMapper implements RowMapper<Fuel> {
@@ -85,4 +97,5 @@ public class FuelDaoJdbc implements FuelDao {
             return fuel;
         }
     }
+
 }

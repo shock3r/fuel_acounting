@@ -1,4 +1,123 @@
 package com.epam.brest.courses.dao;
 
+
+import com.epam.brest.courses.model.Fuel;
+import com.epam.brest.courses.model.Transport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.Types;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_ID;
+import static com.epam.brest.courses.constants.TransportConstants.*;
+
+/**
+ * TRANSPORT DAO JDBC implementation.
+ */
 public class TransportDaoJdbc implements TransportDao {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(TransportDaoJdbc.class);
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Value("${transport.findAll}")
+    private String findAll;
+    @Value("${transport.findAllFromDateToDate}")
+    private String findAllFromDateToDate;
+    @Value("${transport.findAllByFuelId}")
+    private String findAllByFuelId;
+    @Value("${transport.findById}")
+    private String findById;
+    @Value("${transport.select}")
+    private String selectSql;
+    @Value("${transport.create}")
+    private String createSql;
+    @Value("${transport.update}")
+    private String updateSql;
+    @Value("${transport.delete}")
+    private String deleteSql;
+
+    public TransportDaoJdbc(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    @Override
+    public List<Transport> findAll() {
+        LOGGER.debug("findAll()");
+        List<Transport> transports =
+                namedParameterJdbcTemplate.query(findAll, BeanPropertyRowMapper.newInstance(Transport.class));
+        return transports;
+    }
+
+    @Override
+    public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
+        LOGGER.debug("findAllFromDateToDate(dateFrom:{}, dateTo:{})",dateFrom,dateTo);
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(dateFrom.getTime());
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue(DATE_FROM, dateFrom, Types.DATE);
+        namedParameters.addValue(DATE_TO, dateTo, Types.DATE);
+        SqlParameterSource sqlParameterSource = namedParameters;
+
+        List<Transport> transports =
+                namedParameterJdbcTemplate.query(findAllFromDateToDate, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
+        return transports;
+    }
+
+    @Override
+    public List<Transport> findByFuelId(Integer fuelId) {
+        LOGGER.debug("findByFuelId(id:{})", fuelId);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(FUEL_ID, fuelId);
+        List<Transport> transports =
+                namedParameterJdbcTemplate.query(findAllByFuelId, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
+        return transports;
+    }
+
+    @Override
+    public Optional<Transport> findById(Integer transportId) {
+        LOGGER.debug("findById(id:{})", transportId);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(TRANSPORT_ID, transportId);
+        List<Transport> transports =
+                namedParameterJdbcTemplate.query(findById, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
+        return Optional.ofNullable(DataAccessUtils.uniqueResult(transports));
+    }
+
+    @Override
+    public Integer create(Transport transport) {
+
+        LOGGER.debug("create(transport:{})", transport);
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue(TRANSPORT_NAME, transport.getTransportName());
+        parameters.addValue(FUEL_ID, transport.getFuelId());
+        parameters.addValue(TRANSPORT_TANK_CAPASITY, transport.getTransportTankCapasity());
+        parameters.addValue(TRANSPORT_DATE, transport.getTransportDate());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createSql, parameters, keyHolder);
+        return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public int update(Transport transport) {
+        LOGGER.debug("update(transport:{})", transport);
+        return namedParameterJdbcTemplate.update(updateSql, new BeanPropertySqlParameterSource(transport));
+    }
+
+    @Override
+    public int delete(Integer transportId) {
+        LOGGER.debug("delete(id:{})",transportId);
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue(TRANSPORT_ID, transportId);
+        return namedParameterJdbcTemplate.update(deleteSql, parameters);
+    }
 }
