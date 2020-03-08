@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
 public class TransportDaoJdbcIT {
 
+    public static final String DATE_FROM = "01/03/2020";
+    public static final String DATE_FOR_TRANSPORT2 = "02/03/2020";
+    public static final String DATE_TO = "08/03/2020";
     private final TransportDao transportDao;
 
     @Autowired
@@ -47,7 +50,7 @@ public class TransportDaoJdbcIT {
     @Test
     public void shouldFindAllTransportsInValueFromToDate() {
         // given
-        Date dateFrom = getDateByString("01/03/2020");
+        Date dateFrom = getDateByString(DATE_FROM);
         Transport transport1 = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
@@ -57,7 +60,7 @@ public class TransportDaoJdbcIT {
         Integer id1 = transportDao.create(transport1);
         assertNotNull(id1);
 
-        Date dateTransport2 = getDateByString("02/03/2020");
+        Date dateTransport2 = getDateByString(DATE_FOR_TRANSPORT2);
         Transport transport2 = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
@@ -66,7 +69,7 @@ public class TransportDaoJdbcIT {
 
         Integer id2 = transportDao.create(transport2);
         assertNotNull(id2);
-        Date dateTo = getDateByString("08/03/2020");
+        Date dateTo = getDateByString(DATE_TO);
 
         // when
         List<Transport> transports = transportDao.findAllFromDateToDate(dateFrom, dateTo);
