@@ -14,7 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
 
-    @GetMapping(value = "/Hello")
+    /**
+     *  Goto hello world test page.
+     * @param name parameter.
+     * @param model model.
+     * @return view name.
+     */
+    @GetMapping(value = "/hello")
     public String hello2(@RequestParam(value = "name",required = false, defaultValue = "world") String name,
                         Model model) {
         LOGGER.debug("hello(name:{})", name);
