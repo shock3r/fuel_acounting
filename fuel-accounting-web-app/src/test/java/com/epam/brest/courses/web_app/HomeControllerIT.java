@@ -35,7 +35,7 @@ public class HomeControllerIT {
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("hello"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("fuels"));
     }
 
 }

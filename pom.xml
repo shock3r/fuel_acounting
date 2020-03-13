@@ -205,6 +205,9 @@
                         </webApp>
                         <httpConnector>
                             <port>8081</port>
+<!--                            <stopPort>9966</stopPort>-->
+<!--                            <stopKey>foo</stopKey>-->
+<!--                            <stopWait>10</stopWait>-->
                         </httpConnector>
                     </configuration>
                 </plugin>

@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet"
+          href="../../resources/static/css/font-awesome.min.css"
+          th:href="@{/resources/static/css/font-awesome.min.css}">
+    <link rel="stylesheet"
+          href="../../resources/static/css/bootstrap.css"
+          th:href="@{/resources/static/css/bootstrap.css}">
+    <link rel="stylesheet"
+          href="../../resources/static/css/style.css"
+          th:href="@{/resources/static/css/style.css}">
     <title>Transports</title>
 </head>
 <body>
 
 <header>
     <nav class="pl-2 navbar navbar-expand-sm navbar-dark bg-dark text-light  p-0">
-        <a href="index.html" class="navbar-brand"><img src="img/logo.svg" height="32" width="32" alt="HR"></a>
+        <a href="/" class="navbar-brand"><img src="../../resources/static/img/logo.svg"
+                                                       th:src="@{/resources/static/img/logo.svg}"
+                                                       height="32" width="32" alt="HR"></a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <a class="nav-item nav-link" href="fuels.html">Fuels</a>
-                <a class="nav-item nav-link active" href="transports.html">Transports</a>
+                <a class="nav-item nav-link"
+                    href="fuels.html"
+                    th:href="@{/fuels}">Fuels</a>
+                <a class="nav-item nav-link active"
+                    href="transports.html"
+                    th:href="@{/transports}">Transports</a>
             </ul>
         </div>
     </nav>
@@ -29,6 +41,7 @@
         <ul class="navbar-nav float-right">
             <li class="nav-item">
                 <a href="transport.html"
+                   th:href="@{/transport}"
                    class="btn btn-light"
                    title="Add transport"
                    data-toggle="tooltip"
@@ -65,6 +78,7 @@
                             <td>2020-02-04</td>
                             <td class="text-right">
                                 <a href="transport.html"
+                                   th:href="@{/transport}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit transport"
                                    data-toggle="tooltip"
@@ -93,6 +107,7 @@
                             <td>2020-02-10</td>
                             <td class="text-right">
                                 <a href="transport.html"
+                                   th:href="@{/transport}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit transport"
                                    data-toggle="tooltip"
@@ -121,6 +136,7 @@
                             <td>2020-02-13</td>
                             <td class="text-right">
                                 <a href="transport.html"
+                                   th:href="@{/transport}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit transport"
                                    data-toggle="tooltip"
@@ -177,9 +193,12 @@
     </div>
 </div>
 
-<script src="js/jquery-3.4.1.slim.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="../../resources/static/js/jquery-3.4.1.slim.min.js"
+        th:src="@{/resources/static/js/jquery-3.4.1.slim.min.js}"></script>
+<script src="../../resources/static/js/popper.min.js"
+        th:src="@{/resources/static/js/popper.min.js}"></script>
+<script src="../../resources/static/js/bootstrap.min.js"
+        th:src="@{/resources/static/js/bootstrap.min.js}"></script>
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
