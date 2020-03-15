@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.epam.brest.courses</groupId>
-            <artifactId>fuel-accounting-test</artifactId>
+            <artifactId>fuel-accounting-test-db</artifactId>
         </dependency>
 
         <dependency>

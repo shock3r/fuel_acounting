@@ -12,7 +12,7 @@
     <modules>
         <module>fuel-accounting-dao</module>
         <module>fuel-accounting-model</module>
-        <module>fuel-accounting-test</module>
+        <module>fuel-accounting-test-db</module>
         <module>fuel-accounting-web-app</module>
         <module>fuel-accounting-service</module>
         <module>fuel-accounting-service-api</module>
@@ -45,7 +45,7 @@
             </dependency>
             <dependency>
                 <groupId>com.epam.brest.courses</groupId>
-                <artifactId>fuel-accounting-test</artifactId>
+                <artifactId>fuel-accounting-test-db</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
