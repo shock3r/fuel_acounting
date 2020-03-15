@@ -190,6 +190,5 @@ public class TransportDaoJdbcIT {
         List<Transport> currentTransports = transportDao.findAll();
         assertNotNull(currentTransports);
         assertEquals(transports.size() - 1, currentTransports.size());
-
     }
 }

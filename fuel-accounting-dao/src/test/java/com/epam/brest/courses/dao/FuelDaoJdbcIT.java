@@ -103,7 +103,5 @@ public class FuelDaoJdbcIT {
         assertNotNull(currentFuels);
 
         assertTrue(fuels.size()-1 == currentFuels.size());
-
-
     }
 }

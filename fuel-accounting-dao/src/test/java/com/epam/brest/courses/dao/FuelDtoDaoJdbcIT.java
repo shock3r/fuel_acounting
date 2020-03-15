@@ -28,6 +28,5 @@ public class FuelDtoDaoJdbcIT {
            assertNotNull(firstFoundedFuel.getSumFuel());
            assertTrue(firstFoundedFuel.getSumFuel()>0);
         }
-
     }
 }
