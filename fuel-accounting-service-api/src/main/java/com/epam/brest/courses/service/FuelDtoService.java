@@ -1,16 +1,17 @@
-package com.epam.brest.courses.dao;
-
+package com.epam.brest.courses.service;
 import com.epam.brest.courses.model.dto.FuelDto;
 import java.util.List;
 
 /**
- * FuelDTO DAO Interface.
+ * Fuel DTO Service interface.
  */
-public interface FuelDtoDao {
+public interface FuelDtoService {
+
     /**
      * Find all fuels with sum of transports tank capasity by fuel type.
      *
-     * @return fuels DTO list.
+     * @return Fuels DTO list,
      */
     List<FuelDto> findAllWithFuelSum();
+
 }
