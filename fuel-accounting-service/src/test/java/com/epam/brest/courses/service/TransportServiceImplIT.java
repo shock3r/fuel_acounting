@@ -1,4 +1,4 @@
-package com.epam.brest.courses.dao;
+package com.epam.brest.courses.service;
 
 import com.epam.brest.courses.model.Transport;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,26 +14,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
+import static com.epam.brest.courses.constants.TransportConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
-public class TransportDaoJdbcIT {
+@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-service.xml", "classpath*:dao.xml"})
+public class TransportServiceImplIT {
 
     public static final String DATE_FROM = "01/03/2020";
     public static final String DATE_FOR_TRANSPORT2 = "02/03/2020";
     public static final String DATE_TO = "08/03/2020";
-    private final TransportDao transportDao;
 
     @Autowired
-    public TransportDaoJdbcIT(TransportDao transportDao) {
-        this.transportDao = transportDao;
-    }
+    private TransportService transportService;
 
     @Test
     public void shoulFindAllTransports() {
-        List<Transport> transports = transportDao.findAll();
+        List<Transport> transports = transportService.findAll();
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
@@ -57,7 +54,7 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(dateFrom);
 
-        Integer id1 = transportDao.create(transport1);
+        Integer id1 = transportService.create(transport1);
         assertNotNull(id1);
 
         Date dateTransport2 = getDateByString(DATE_FOR_TRANSPORT2);
@@ -67,12 +64,12 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(dateTransport2);
 
-        Integer id2 = transportDao.create(transport2);
+        Integer id2 = transportService.create(transport2);
         assertNotNull(id2);
         Date dateTo = getDateByString(DATE_TO);
 
         // when
-        List<Transport> transports = transportDao.findAllFromDateToDate(dateFrom, dateTo);
+        List<Transport> transports = transportService.findAllFromDateToDate(dateFrom, dateTo);
         // then
         assertNotNull(transports);
         assertTrue(2 == transports.size());
@@ -80,7 +77,7 @@ public class TransportDaoJdbcIT {
 
     @Test
     public void shouldFindTransportsByFuilId() {
-        List<Transport> transports = transportDao.findByFuelId(1);
+        List<Transport> transports = transportService.findByFuelId(1);
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
@@ -95,11 +92,11 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(getDateWithoutTimeUsingCalendar());
 
-        Integer id = transportDao.create(transport);
+        Integer id = transportService.create(transport);
         assertNotNull(id);
 
         // when
-        Optional<Transport> optionalTransport = transportDao.findById(id);
+        Optional<Transport> optionalTransport = transportService.findById(id);
 
         // then
         assertTrue(optionalTransport.isPresent());
@@ -133,7 +130,7 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(getDateWithoutTimeUsingCalendar());
 
-        Integer id = transportDao.create(transport);
+        Integer id = transportService.create(transport);
         assertNotNull(id);
     }
 
@@ -147,20 +144,20 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(getDateWithoutTimeUsingCalendar());
 
-        Integer id = transportDao.create(transport);
+        Integer id = transportService.create(transport);
         assertNotNull(id);
 
-        Optional<Transport> transportOptional = transportDao.findById(id);
+        Optional<Transport> transportOptional = transportService.findById(id);
         assertTrue(transportOptional.isPresent());
         transportOptional.get()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE));
 
         //when
-        int result = transportDao.update(transportOptional.get());
+        int result = transportService.update(transportOptional.get());
 
         //then
         assertTrue(1 == result);
-        Optional<Transport> updatedTransportOptional = transportDao.findById(id);
+        Optional<Transport> updatedTransportOptional = transportService.findById(id);
         assertTrue(updatedTransportOptional.isPresent());
         assertEquals(id, updatedTransportOptional.get().getTransportId());
         assertEquals(transportOptional.get().getTransportName(), updatedTransportOptional.get().getTransportName());
@@ -176,19 +173,20 @@ public class TransportDaoJdbcIT {
                 .setTransportTankCapasity(50d)
                 .setTransportDate(getDateWithoutTimeUsingCalendar());
 
-        Integer id = transportDao.create(transport);
+        Integer id = transportService.create(transport);
         assertNotNull(id);
 
         List<Transport> transports =
-                transportDao.findAll();
+                transportService.findAll();
         assertNotNull(transports);
 
         // when
-        int result = transportDao.delete(id);
+        int result = transportService.delete(id);
         assertTrue(1 == result);
 
-        List<Transport> currentTransports = transportDao.findAll();
+        List<Transport> currentTransports = transportService.findAll();
         assertNotNull(currentTransports);
         assertEquals(transports.size() - 1, currentTransports.size());
     }
+
 }

@@ -1,4 +1,4 @@
-package com.epam.brest.courses.dao;
+package com.epam.brest.courses.service;
 
 import com.epam.brest.courses.model.Fuel;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,34 +14,31 @@ import java.util.Optional;
 
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
-public class FuelDaoJdbcIT {
-
-    private final FuelDao fuelDao;
+@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-service.xml", "classpath*:dao.xml"})
+public class FuelServiceImplIT {
 
     @Autowired
-    public FuelDaoJdbcIT(FuelDao fuelDao) {
-        this.fuelDao = fuelDao;
-    }
+    FuelService fuelService;
 
     @Test
-    public void shoulFindAllFuels() {
-        List<Fuel> fuels = fuelDao.findAll();
+    public void shouldFindAllFuels(){
+        List<Fuel> fuels =fuelService.findAll();
         assertNotNull(fuels);
         assertTrue(fuels.size() > 0);
     }
 
     @Test
-    public void shouldFindFuelById(){
+    public void shouldfindFuelById(){
         // given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
-        Integer id = fuelDao.create(fuel);
+        Integer id = fuelService.create(fuel);
 
         // when
-        Optional<Fuel> fuelOptional = fuelDao.findById(id);
+        Optional<Fuel> fuelOptional = fuelService.findById(id);
 
         // then
         assertTrue(fuelOptional.isPresent());
@@ -53,7 +50,7 @@ public class FuelDaoJdbcIT {
     public void shouldCreateFuel(){
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
-        Integer id = fuelDao.create(fuel);
+        Integer id = fuelService.create(fuel);
         assertNotNull(id);
     }
 
@@ -62,21 +59,21 @@ public class FuelDaoJdbcIT {
         // given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
-        Integer id = fuelDao.create(fuel);
+        Integer id = fuelService.create(fuel);
         assertNotNull(id);
 
-        Optional<Fuel> fuelOptional = fuelDao.findById(id);
+        Optional<Fuel> fuelOptional = fuelService.findById(id);
         Assertions.assertTrue(fuelOptional.isPresent());
 
         fuelOptional.get()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
 
         // when
-        int result = fuelDao.update(fuelOptional.get());
+        int result = fuelService.update(fuelOptional.get());
 
         // then
         assertTrue(1 == result);
-        Optional<Fuel> updatedFuelOptional = fuelDao.findById(id);
+        Optional<Fuel> updatedFuelOptional = fuelService.findById(id);
         Assertions.assertTrue(updatedFuelOptional.isPresent());
         assertEquals(updatedFuelOptional.get().getFuelId(), id);
         assertEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
@@ -87,21 +84,22 @@ public class FuelDaoJdbcIT {
         //given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
-        Integer id = fuelDao.create(fuel);
+        Integer id = fuelService.create(fuel);
         assertNotNull(id);
 
-        List<Fuel> fuels= fuelDao.findAll();
+        List<Fuel> fuels= fuelService.findAll();
         assertNotNull(fuels);
 
         // when
-        int result = fuelDao.delete(id);
+        int result = fuelService.delete(id);
 
         //then
         assertTrue(1 == result);
 
-        List<Fuel> currentFuels = fuelDao.findAll();
+        List<Fuel> currentFuels = fuelService.findAll();
         assertNotNull(currentFuels);
 
         assertTrue(fuels.size()-1 == currentFuels.size());
     }
+
 }

@@ -1,4 +1,4 @@
-package com.epam.brest.courses.dao;
+package com.epam.brest.courses.service;
 
 import com.epam.brest.courses.model.dto.FuelDto;
 import org.junit.jupiter.api.Test;
@@ -13,20 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
-public class FuelDtoDaoJdbcIT {
+@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-service.xml", "classpath*:dao.xml"})
+public class FuelDtoServiceImplIT {
+
     @Autowired
-    FuelDtoDao fuelDtoDao;
+    private FuelDtoService fuelDtoService;
 
     @Test
     public void shouldFindSumOfFuelByTransport(){
-        List<FuelDto> fuels = fuelDtoDao.findAllWithFuelSum();
+        List<FuelDto> fuels = fuelDtoService.findAllWithFuelSum();
         assertNotNull(fuels);
         assertTrue(fuels.size()>0);
         if (fuels.size()>0) {
-           FuelDto firstFoundedFuel = fuels.get(0);
-           assertNotNull(firstFoundedFuel.getSumFuel());
-           assertTrue(firstFoundedFuel.getSumFuel()>0);
+            FuelDto firstFoundedFuel = fuels.get(0);
+            assertNotNull(firstFoundedFuel.getSumFuel());
+            assertTrue(firstFoundedFuel.getSumFuel()>0);
         }
     }
+
 }

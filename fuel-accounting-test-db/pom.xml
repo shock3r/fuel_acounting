@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fuel-accounting-test</artifactId>
+    <artifactId>fuel-accounting-test-db</artifactId>
 
     <dependencies>
         <dependency>
