@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -58,6 +59,18 @@ public class FuelController {
         } else {
             return "redirect:/fuels";
         }
+    }
+
+    /**
+     * Update fuel.
+     * @param fuel fuel.
+     * @return view name.
+     */
+    @PostMapping(value="fuel/{id}")
+    public String updateFuel(Fuel fuel){
+        LOGGER.debug("updateFuel({})", fuel);
+        this.fuelService.update(fuel);
+        return "redirect:/fuels";
     }
 
     /**

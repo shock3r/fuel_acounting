@@ -1,9 +1,11 @@
 package com.epam.brest.courses.web_app;
 
+import com.epam.brest.courses.model.Fuel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -12,21 +14,23 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath*:app-context-test.xml"})
+@Transactional
 public class FuelControllerIT {
     public static final String FUELS_VIEW_NAME = "fuels";
+    public static final String FUEL_VIEW_NAME = "fuel";
     public static final String FUELS_MODEL_ATRIBUTE = "fuels";
+    public static final String FUEL_MODEL_ATRIBUTE = "fuel";
+    public static final String FUEL_SESSION_ATRIBUTE = "fuel";
     @Autowired
     private WebApplicationContext wac;
 
@@ -69,9 +73,9 @@ public class FuelControllerIT {
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
-                .andExpect(view().name("fuel"))
-                .andExpect(model().attribute("fuel", hasProperty("fuelId", is(1))))
-                .andExpect(model().attribute("fuel", hasProperty("fuelName", is("Gasoline"))));
+                .andExpect(view().name(FUEL_VIEW_NAME))
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Gasoline"))));
     }
 
     @Test
@@ -82,5 +86,30 @@ public class FuelControllerIT {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/fuels"));
+    }
+
+    @Test
+    public void shouldUpdateFuelAfterEdit() throws Exception{
+        Fuel fuel = new Fuel()
+                .setFuelId(1)
+                .setFuelName("Test");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/fuel/1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param(FUEL_ID, String.valueOf(fuel.getFuelId()))
+                        .param(FUEL_NAME, fuel.getFuelName())
+                .sessionAttr(FUEL_SESSION_ATRIBUTE, fuel)
+        ).andExpect(status().isFound())
+            .andExpect(view().name("redirect:/fuels"))
+            .andExpect(redirectedUrl("/fuels"));
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/fuel/1")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name(FUEL_VIEW_NAME))
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Test"))));
     }
 }

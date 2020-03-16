@@ -56,7 +56,13 @@
                 <div class="card">
                     <div class="card-body">
                         <form id="fuelForm"
-                            th:object="${fuel}">
+                            th:object="${fuel}"
+                            action="fuels.html"
+                            th:action="@{${#httpServletRequest.servletPath}}"
+                            th:method="@{post}">
+                            <input id="field.fuelId"
+                            th:field="*{fuelId}">
+
                             <div class="form-group">
                                 <label class="form-control-label" for="field_fuelName">Fuel name</label>
                                 <input class="form-control" id="field_fuelName" type="text" value="Diesel" th:field="*{fuelName}">
@@ -69,6 +75,7 @@
                                    data-placement="top">Cancel</a>
                                 <a href="fuels.html"
                                    th:href="@{/fuels}"
+                                   th:onclick="@{document.forms['fuelForm'].submit(); return false;}"
                                    class="btn btn-primary"
                                    title="Save fuel"data-toggle="tooltip"
                                    data-placement="top">
