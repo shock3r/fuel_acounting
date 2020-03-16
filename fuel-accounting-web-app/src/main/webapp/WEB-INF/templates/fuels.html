@@ -67,9 +67,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Gasoline</td>
-                            <td>200</td>
+                        <tr th:each="fuel : ${fuels}">
+                            <td th:text="${fuel.fuelName}">Gasoline</td>
+                            <td th:text="${fuel.sumFuel}">200</td>
                             <td class="text-right">
                                 <a href="fuel.html"
                                    th:href="@{/fuel}"
@@ -95,7 +95,7 @@
                                 </span>
                             </td>
                         </tr>
-                        <tr>
+                        <tr th:remove="all">
                             <td>Diesel</td>
                             <td>300</td>
                             <td class="text-right">
