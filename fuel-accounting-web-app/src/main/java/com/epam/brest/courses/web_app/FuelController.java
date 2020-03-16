@@ -56,8 +56,7 @@ public class FuelController {
             model.addAttribute("fuel", optionalFuel.get());
             return "fuel";
         } else {
-            //TODO handle not found error
-            return "redirect:fuels";
+            return "redirect:/fuels";
         }
     }
 

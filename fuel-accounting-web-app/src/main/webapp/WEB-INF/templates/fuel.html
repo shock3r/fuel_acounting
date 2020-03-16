@@ -55,10 +55,11 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form id="fuelForm"
+                            th:object="${fuel}">
                             <div class="form-group">
                                 <label class="form-control-label" for="field_fuelName">Fuel name</label>
-                                <input class="form-control" id="field_fuelName" type="text" value="Diesel">
+                                <input class="form-control" id="field_fuelName" type="text" value="Diesel" th:field="*{fuelName}">
                             </div>
                             <div class="d-flex justify-content-end">
                                 <a href="fuels.html"

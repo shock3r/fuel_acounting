@@ -81,6 +81,6 @@ public class FuelControllerIT {
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("fuels"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/fuels"));
     }
 }
