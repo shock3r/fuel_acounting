@@ -20,8 +20,17 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Arrays;
 
+import static com.epam.brest.courses.constants.FuelConstants.*;
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_SUM_FUEL;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 @ExtendWith(MockitoExtension.class)
 public class FuelControllerMockTest {
+    public static final String FIRST_FUEL_NAME = "name0";
+    public static final String SECOND_FUEL_NAME = "name1";
     @InjectMocks
     private FuelController fuelController;
     @Mock
@@ -52,7 +61,22 @@ public class FuelControllerMockTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/fuels")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/templates/fuels.html"));
+                .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/templates/fuels.html"))
+                .andExpect(view().name("fuels"))
+                .andExpect(model().attribute("fuels", hasItem(
+                        allOf(
+                                hasProperty(FUEL_ID, is(0)),
+                                hasProperty(FUEL_NAME, is(FIRST_FUEL_NAME)),
+                                hasProperty(FUEL_SUM_FUEL, is(100.d))
+                        )
+                )))
+                .andExpect(model().attribute("fuels", hasItem(
+                        allOf(
+                                hasProperty(FUEL_ID, is(1)),
+                                hasProperty(FUEL_NAME, is(SECOND_FUEL_NAME)),
+                                hasProperty(FUEL_SUM_FUEL, is(101.d))
+                        )
+                )));
     }
 
     /**
@@ -73,7 +97,8 @@ public class FuelControllerMockTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/fuel")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/templates/fuel.html"));
+                .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/templates/fuel.html"))
+        ;
     }
 
 }
