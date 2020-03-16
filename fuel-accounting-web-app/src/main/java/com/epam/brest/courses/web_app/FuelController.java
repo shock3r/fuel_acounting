@@ -1,15 +1,19 @@
 package com.epam.brest.courses.web_app;
 
+import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.dto.FuelDto;
 import com.epam.brest.courses.service.FuelDtoService;
+import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Hello MVC controller.
@@ -18,9 +22,11 @@ import java.util.List;
 public class FuelController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FuelController.class);
     private final FuelDtoService fuelDtoService;
+    private final FuelService fuelService;
 
-    public FuelController(FuelDtoService fuelDtoService) {
+    public FuelController(FuelDtoService fuelDtoService, FuelService fuelService) {
         this.fuelDtoService = fuelDtoService;
+        this.fuelService = fuelService;
     }
 
     /**
@@ -31,9 +37,28 @@ public class FuelController {
     @GetMapping(value = "/fuels")
     public String fuels(Model model) {
         LOGGER.debug("fuels()");
-        List<FuelDto> fuelDtoList = fuelDtoService.findAllWithFuelSum();
         model.addAttribute("fuels", fuelDtoService.findAllWithFuelSum());
         return "fuels";
+    }
+
+    /**
+     * Goto fuel edit page.
+     *
+     * @param id fuel id.
+     * @param model model.
+     * @return view name.
+     */
+    @GetMapping(value="/fuel/{id}")
+    public String gotoEditFuelPage(@PathVariable Integer id, Model model){
+        LOGGER.debug("gotoEditFuelPage({},{})", id, model);
+        Optional<Fuel> optionalFuel = fuelService.findById(id);
+        if (optionalFuel.isPresent()){
+            model.addAttribute("fuel", optionalFuel.get());
+            return "fuel";
+        } else {
+            //TODO handle not found error
+            return "redirect:fuels";
+        }
     }
 
     /**
