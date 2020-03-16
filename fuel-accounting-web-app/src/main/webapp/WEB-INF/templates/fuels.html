@@ -72,7 +72,7 @@
                             <td th:text="${fuel.sumFuel}">200</td>
                             <td class="text-right">
                                 <a href="fuel.html"
-                                   th:href="@{/fuel}"
+                                   th:href="@{|/fuel/${fuel.fuelId}|}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit fuel"
                                    data-toggle="tooltip"
