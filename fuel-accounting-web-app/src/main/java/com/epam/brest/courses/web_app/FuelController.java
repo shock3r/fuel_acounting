@@ -87,4 +87,16 @@ public class FuelController {
         return "fuel";
     }
 
+    /**
+     * Persist new fuel into persistence storage.
+     * @param fuel new fuel with filled data.
+     * @return view name.
+     */
+    @PostMapping(value = "/fuel")
+    public String addNewFuel(Fuel fuel){
+        LOGGER.debug("addNewFuel({})", fuel);
+        this.fuelService.create(fuel);
+        return "redirect:/fuels";
+    }
+
 }

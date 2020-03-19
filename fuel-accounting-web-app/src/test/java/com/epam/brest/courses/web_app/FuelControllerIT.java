@@ -125,4 +125,15 @@ public class FuelControllerIT {
                 .andExpect(model().attribute("isNew", is(true)))
                 .andExpect(model().attribute("fuel", isA(Fuel.class)));
     }
+
+    @Test
+    public void shouldAddNewFuel() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/fuel")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fuelName", "test")
+        ).andExpect(status().isFound())
+        .andExpect(view().name("redirect:/fuels"))
+        .andExpect(redirectedUrl("/fuels"));
+    }
 }
