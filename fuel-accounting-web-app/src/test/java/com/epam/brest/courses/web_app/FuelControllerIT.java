@@ -74,6 +74,7 @@ public class FuelControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
                 .andExpect(view().name(FUEL_VIEW_NAME))
+                .andExpect(model().attribute("isNew",is(false)))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Gasoline"))));
     }
@@ -111,5 +112,17 @@ public class FuelControllerIT {
                 .andExpect(view().name(FUEL_VIEW_NAME))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Test"))));
+    }
+
+    @Test
+    public void shouldOpenNewFuelPage() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/fuel")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("fuel"))
+                .andExpect(model().attribute("isNew", is(true)))
+                .andExpect(model().attribute("fuel", isA(Fuel.class)));
     }
 }

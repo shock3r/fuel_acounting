@@ -54,6 +54,7 @@ public class FuelController {
         LOGGER.debug("gotoEditFuelPage({},{})", id, model);
         Optional<Fuel> optionalFuel = fuelService.findById(id);
         if (optionalFuel.isPresent()){
+            model.addAttribute("isNew", false);
             model.addAttribute("fuel", optionalFuel.get());
             return "fuel";
         } else {
@@ -74,13 +75,15 @@ public class FuelController {
     }
 
     /**
-     *  Goto fuel page.
+     *  Goto add fuel page.
      * @param model model.
      * @return view name.
      */
     @GetMapping(value = "/fuel")
-    public String fuel(Model model){
-        LOGGER.debug("fuel()");
+    public String gotoAddFuelPage(Model model){
+        LOGGER.debug("gotoAddFuelPage({})", model);
+        model.addAttribute("isNew", true);
+        model.addAttribute("fuel", new Fuel());
         return "fuel";
     }
 
