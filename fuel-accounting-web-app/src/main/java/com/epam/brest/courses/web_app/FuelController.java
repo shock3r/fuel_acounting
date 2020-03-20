@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +93,19 @@ public class FuelController {
     public String addNewFuel(Fuel fuel){
         LOGGER.debug("addNewFuel({})", fuel);
         this.fuelService.create(fuel);
+        return "redirect:/fuels";
+    }
+
+    /**
+     * Delete fuel by id.
+     * @param id Integer id.
+     * @param model model.
+     * @return view name.
+     */
+    @GetMapping(value = "/fuel/{id}/delete")
+    public String deleteFuel(@PathVariable Integer id, Model model) {
+        LOGGER.debug("deleteFuel({},{})", id, model);
+        this.fuelService.delete(id);
         return "redirect:/fuels";
     }
 

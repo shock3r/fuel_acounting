@@ -136,4 +136,16 @@ public class FuelControllerIT {
         .andExpect(view().name("redirect:/fuels"))
         .andExpect(redirectedUrl("/fuels"));
     }
+
+    @Test
+    public void shouldDeleteFuel() throws Exception {
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/fuel/3/delete")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(view().name("redirect:/fuels"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/fuels"));
+
+    }
 }
