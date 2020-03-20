@@ -1,9 +1,7 @@
 ![Java CI](https://github.com/alexanderignathick/aignathick-fuel-accounting/workflows/Java%20CI/badge.svg)
 
-# fuel_accounting
+# Fuel accounting
 main course project
-
-used java sdk 11
 
 ## How build
 Setup java 11 and Maven, see [enviroment_setup.md](enviroment_setup.md)
