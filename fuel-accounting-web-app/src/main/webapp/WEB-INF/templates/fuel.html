@@ -45,7 +45,8 @@
                     class="btn btn-light btn-block">
                 <i class="fa fa-arrow-left"></i></a></li>
         </ul>
-        <span class="navbar-brand text-uppercase mr-auto">Edit fuel</span>
+        <span class="navbar-brand text-uppercase mr-auto"
+            th:text="${isNew} ? 'New fuel' : 'Edit fuel' ">Edit fuel</span>
     </nav>
 </header>
 
@@ -55,10 +56,18 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form id="fuelForm"
+                            th:object="${fuel}"
+                            action="fuels.html"
+                            th:action="@{${#httpServletRequest.servletPath}}"
+                            th:method="@{post}">
+                            <input id="field_fuelId"
+                                type="hidden"
+                                th:field="*{fuelId}">
+
                             <div class="form-group">
                                 <label class="form-control-label" for="field_fuelName">Fuel name</label>
-                                <input class="form-control" id="field_fuelName" type="text" value="Diesel">
+                                <input class="form-control" id="field_fuelName" type="text" value="Diesel" th:field="*{fuelName}">
                             </div>
                             <div class="d-flex justify-content-end">
                                 <a href="fuels.html"
@@ -68,6 +77,7 @@
                                    data-placement="top">Cancel</a>
                                 <a href="fuels.html"
                                    th:href="@{/fuels}"
+                                   th:onclick="@{document.forms['fuelForm'].submit(); return false;}"
                                    class="btn btn-primary"
                                    title="Save fuel"data-toggle="tooltip"
                                    data-placement="top">
