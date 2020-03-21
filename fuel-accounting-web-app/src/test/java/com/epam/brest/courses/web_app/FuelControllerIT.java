@@ -31,6 +31,8 @@ public class FuelControllerIT {
     public static final String FUELS_MODEL_ATRIBUTE = "fuels";
     public static final String FUEL_MODEL_ATRIBUTE = "fuel";
     public static final String FUEL_SESSION_ATRIBUTE = "fuel";
+    public static final String TEST = "test";
+    public static final String IS_NEW = "isNew";
     @Autowired
     private WebApplicationContext wac;
 
@@ -74,7 +76,7 @@ public class FuelControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
                 .andExpect(view().name(FUEL_VIEW_NAME))
-                .andExpect(model().attribute("isNew",is(false)))
+                .andExpect(model().attribute(IS_NEW,is(false)))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Gasoline"))));
     }
@@ -93,7 +95,7 @@ public class FuelControllerIT {
     public void shouldUpdateFuelAfterEdit() throws Exception{
         Fuel fuel = new Fuel()
                 .setFuelId(1)
-                .setFuelName("Test");
+                .setFuelName(TEST);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/fuel/1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -111,7 +113,7 @@ public class FuelControllerIT {
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
                 .andExpect(view().name(FUEL_VIEW_NAME))
                 .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_ID, is(1))))
-                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is("Test"))));
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, hasProperty(FUEL_NAME, is(TEST))));
     }
 
     @Test
@@ -121,9 +123,9 @@ public class FuelControllerIT {
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
-                .andExpect(view().name("fuel"))
-                .andExpect(model().attribute("isNew", is(true)))
-                .andExpect(model().attribute("fuel", isA(Fuel.class)));
+                .andExpect(view().name(FUEL_VIEW_NAME))
+                .andExpect(model().attribute(IS_NEW, is(true)))
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, isA(Fuel.class)));
     }
 
     @Test
@@ -131,7 +133,7 @@ public class FuelControllerIT {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/fuel")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("fuelName", "test")
+                .param(FUEL_NAME, TEST)
         ).andExpect(status().isFound())
         .andExpect(view().name("redirect:/fuels"))
         .andExpect(redirectedUrl("/fuels"));

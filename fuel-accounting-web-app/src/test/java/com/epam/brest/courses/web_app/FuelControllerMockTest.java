@@ -21,7 +21,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.Arrays;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
-import static com.epam.brest.courses.constants.FuelConstants.FUEL_SUM_FUEL;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -44,7 +43,6 @@ public class FuelControllerMockTest {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/templates/");
         viewResolver.setSuffix(".html");
-
         mockMvc = MockMvcBuilders.standaloneSetup(fuelController)
                 .setViewResolvers(viewResolver)
                 .build();

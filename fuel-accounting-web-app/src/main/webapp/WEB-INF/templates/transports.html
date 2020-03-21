@@ -15,7 +15,6 @@
     <title>Transports</title>
 </head>
 <body>
-
 <header>
     <nav class="pl-2 navbar navbar-expand-sm navbar-dark bg-dark text-light  p-0">
         <a href="/" class="navbar-brand"><img src="../../resources/static/img/logo.svg"
@@ -71,14 +70,14 @@
                         </thead>
 
                         <tbody>
-                        <tr>
-                            <td>Golf-Variant-CL-1.8(5M)</td>
-                            <td>Gasoline</td>
-                            <td>45</td>
-                            <td>2020-02-04</td>
+                        <tr th:each="transport:${transports}">
+                            <td th:text="${transport.transportName}">Golf-Variant-CL-1.8(5M)</td>
+                            <td th:text="${transport.fuelId}">Gasoline</td>
+                            <td th:text="${transport.transportTankCapasity}">45</td>
+                            <td th:date="${transport.transportDate}">2020-02-04</td>
                             <td class="text-right">
                                 <a href="transport.html"
-                                   th:href="@{/transport}"
+                                   th:href="@{|/transport/{transport.transportId}|}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit transport"
                                    data-toggle="tooltip"
@@ -100,7 +99,7 @@
                                 </span>
                             </td>
                         </tr>
-                        <tr>
+                        <tr th:remove="all">
                             <td>VolvoFH-Truck</td>
                             <td>Diesel</td>
                             <td>180</td>
@@ -129,7 +128,7 @@
                                 </span>
                             </td>
                         </tr>
-                        <tr>
+                        <tr th:remove="all">
                             <td>SCMITZ-SKO24</td>
                             <td>Diesel</td>
                             <td>200</td>
