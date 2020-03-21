@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Hello MVC controller.
+ * Fuel MVC controller.
  */
 @Controller
 public class FuelController {

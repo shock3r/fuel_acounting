@@ -125,7 +125,7 @@ public class FuelControllerIT {
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
                 .andExpect(view().name(FUEL_VIEW_NAME))
                 .andExpect(model().attribute(IS_NEW, is(true)))
-                .andExpect(model().attribute(FUELS_MODEL_ATRIBUTE, isA(Fuel.class)));
+                .andExpect(model().attribute(FUEL_MODEL_ATRIBUTE, isA(Fuel.class)));
     }
 
     @Test
