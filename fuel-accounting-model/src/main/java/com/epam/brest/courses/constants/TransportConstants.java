@@ -4,7 +4,7 @@ public class TransportConstants {
 
     public static final String TRANSPORT_ID = "transportId";
     public static final String TRANSPORT_NAME = "transportName";
-    public static final String FUEL_ID = "fuelId";
+    public static final String TRANSPORT_FUEL_ID = "fuelId";
     public static final String TRANSPORT_TANK_CAPASITY = "transportTankCapasity";
     public static final String TRANSPORT_DATE = "transportDate";
 
