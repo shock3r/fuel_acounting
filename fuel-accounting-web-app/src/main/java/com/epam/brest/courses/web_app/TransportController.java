@@ -1,5 +1,6 @@
 package com.epam.brest.courses.web_app;
 
+import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.service.FuelService;
 import com.epam.brest.courses.service.TransportService;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Hello MVC controller.
@@ -38,10 +38,8 @@ public class TransportController {
     @GetMapping(value = "/transports")
     public String transports(Model model) {
         LOGGER.debug("transports()");
-        List<Transport> transports = transportService.findAll();
-        transports.get(0);
-        model.addAttribute("transports", transports);
-        model.addAttribute("fuels", fuelService.findAll());
+        model.addAttribute("transports", this.transportService.findAll());
+        model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
         return "transports";
     }
 
@@ -56,6 +54,7 @@ public class TransportController {
     @GetMapping(value = "/transports/from/{dateFrom}/to/{dateTo}")
     public  String findTransportsByDates(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo, Model model){
         LOGGER.debug("findTransportsByDates({},{},{})", dateFrom, dateTo, model);
+        model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
         model.addAttribute("transports",
                 this.transportService.findAllFromDateToDate(dateFrom, dateTo));
         return "transports";
@@ -76,13 +75,37 @@ public class TransportController {
         if (transportOptional.isPresent()) {
             model.addAttribute("isNew", false);
             model.addAttribute("transport", transportOptional.get());
-            model.addAttribute("fuels", fuelService.findAll());
+            model.addAttribute("fuels", this.fuelService.findAll());
             return "transport";
         } else {
             return "redirect:/transports";
         }
     }
 
+    /**
+     * Uodate transport.
+     *
+     * @param transport transport,
+     * @return view name.
+     */
+    @PostMapping(value = "/transport/{id}")
+    public String updateTransport(Transport transport){
+        LOGGER.debug("updateTransport({}})", transport);
+        this.transportService.update(transport);
+        return "redirect:/transports";
+    }
 
-
+    /**
+     * Get fuels map for thymeleaf template.
+     *
+     * @param fuels List of fuels.
+     * @return HasMap<Integer, Fuel>.
+     */
+    private Map<Integer, Fuel> getFuelsMap(List<Fuel> fuels) {
+        Map<Integer, Fuel> fuelsMap = new HashMap<Integer, Fuel>();
+        for (Fuel fuel : fuels) {
+            fuelsMap.put(fuel.getFuelId(), fuel);
+        }
+        return fuelsMap;
+    }
 }

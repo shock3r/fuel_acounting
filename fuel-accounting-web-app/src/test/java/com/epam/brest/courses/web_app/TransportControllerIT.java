@@ -1,6 +1,7 @@
 package com.epam.brest.courses.web_app;
 
 import com.epam.brest.courses.model.Fuel;
+import com.epam.brest.courses.model.Transport;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,8 +73,13 @@ public class TransportControllerIT {
                                 Matchers.hasProperty(TRANSPORT_TANK_CAPASITY, Matchers.is(45.d))))));
     }
 
+    /**
+     * Get Date from String.
+     * @param dateAsString String.
+     * @return Date.
+     */
     private Date getDateByString(String dateAsString) {
-        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy.MM.dd");
         try {
             return dateformat.parse(dateAsString);
         } catch (Exception ex) {
@@ -106,6 +112,28 @@ public class TransportControllerIT {
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/transports"));
+    }
+
+    @Test
+    public void shouldUpdateTransport() throws Exception {
+//        Transport transport = new Transport()
+//                .setFuelId(1)
+//                .setTransportName("Volvo")
+//                .setFuelId(2)
+//                .setTransportDate(getDateByString("2020-01-31"))
+//                .setTransportTankCapasity(30.d);
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post("/transport/1")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .param(TRANSPORT_ID, String.valueOf(transport.getTransportId()))
+//                .param(TRANSPORT_NAME, transport.getTransportName())
+//                .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
+//                .param(TRANSPORT_DATE, String.valueOf(transport.getTransportDate()))
+//                .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
+//                .sessionAttr("transport", transport)
+//        ).andExpect(status().isFound())
+//                .andExpect(view().name("redirect:/transports"))
+//                .andExpect(redirectedUrl("/transports"));
     }
 
 }
