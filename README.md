@@ -18,5 +18,5 @@ Goto Project folder and execute
     Applicatin was tested on browser google chrome 80.0.3987.132
     in path field use adress: "http://localhost:8081/".
     this adress will redirect you on fuels page: "http://localhost:8081/fuels"
-    For date moment 2020_03_20 17:53 you can use http://localhost:8081/fuel" and
-    "http://localhost:8081/fuels" pages
+    For date moment 2020_03_23 10:30 you can use http://localhost:8081/fuel" and
+    "http://localhost:8081/fuels", "http://localhost:8081/transports" (cant resolve Fuels type column yet), + transport edit buttun that        will redirect to "http://localhost:8081/transport/transportId" page.
