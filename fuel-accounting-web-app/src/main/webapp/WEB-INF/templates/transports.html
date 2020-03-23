@@ -74,7 +74,7 @@
                             <td th:text="${transport.transportName}">Golf-Variant-CL-1.8(5M)</td>
                             <td th:text="${fuelsMap.get(__${transport.fuelId}__).getFuelName()}">Gasoline</td>
                             <td th:text="${transport.transportTankCapasity}">45</td>
-                            <td th:date="${transport.transportDate}">2020-02-04</td>
+                            <td th:text="${#dates.format(transport.transportDate, 'yyyy-MM-dd')}">2020-02-04</td>
                             <td class="text-right">
                                 <a href="transport.html"
                                    th:href="@{|/transport/${transport.transportId}|}"

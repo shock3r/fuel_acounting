@@ -88,12 +88,15 @@
                                 <label class="form-control-label" for="field_fuelTankCapasity">Fuel tank
                                     capasity</label>
                                 <input class="form-control" id="field_fuelTankCapasity" type="number" value="0" min="0"
+                                         th:value=" ${#numbers.formatDecimal(transport.transportTankCapasity,3,2,'COMMA')}"
                                        th:field="*{transportTankCapasity}">
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label" for="field_transportDate">Date</label>
-                                <input class="form-control" id="field_transportDate" type="date"
-                                       th:field="*{transportDate}">
+                                <input class="form-control" id="field_transportDate" type="text"
+                                       th:value="${#dates.format(transport.transportDate, 'yyyy-MM-dd')}"
+                                th:field="*{transportDate}">
+
                             </div>
                             <div class="d-flex justify-content-end">
                                 <a href="transports.html"
