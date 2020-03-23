@@ -72,12 +72,12 @@
                         <tbody>
                         <tr th:each="transport:${transports}">
                             <td th:text="${transport.transportName}">Golf-Variant-CL-1.8(5M)</td>
-                            <td th:text="${transport.fuelId}">Gasoline</td>
+                            <td th:text="*{transport.fuelId}">Gasoline</td>
                             <td th:text="${transport.transportTankCapasity}">45</td>
                             <td th:date="${transport.transportDate}">2020-02-04</td>
                             <td class="text-right">
                                 <a href="transport.html"
-                                   th:href="@{|/transport/{transport.transportId}|}"
+                                   th:href="@{|/transport/${transport.transportId}|}"
                                    class="btn-sm btn-outline-secondary"
                                    title="Edit transport"
                                    data-toggle="tooltip"

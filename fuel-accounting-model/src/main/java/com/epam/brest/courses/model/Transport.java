@@ -1,5 +1,7 @@
 package com.epam.brest.courses.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -25,6 +27,7 @@ public class Transport {
     /**
      * Transport Date.
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date transportDate;
 
     /**

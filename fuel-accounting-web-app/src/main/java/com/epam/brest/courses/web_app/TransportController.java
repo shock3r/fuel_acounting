@@ -38,8 +38,8 @@ public class TransportController {
     @GetMapping(value = "/transports")
     public String transports(Model model) {
         LOGGER.debug("transports()");
-        List<Transport> transports = transportService.findAll();
-        model.addAttribute("transports", transports);
+        model.addAttribute("transports", transportService.findAll());
+        model.addAttribute("fuels", fuelService.findAll());
         return "transports";
     }
 
@@ -80,5 +80,7 @@ public class TransportController {
             return "redirect:/transports";
         }
     }
+
+
 
 }

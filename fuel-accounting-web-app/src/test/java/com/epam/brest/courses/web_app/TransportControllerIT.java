@@ -99,4 +99,13 @@ public class TransportControllerIT {
 
     }
 
+    @Test
+    public void shouldReturnToTransportsPageIfTransportNotFoundById() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/transport/9999")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/transports"));
+    }
+
 }
