@@ -38,7 +38,9 @@ public class TransportController {
     @GetMapping(value = "/transports")
     public String transports(Model model) {
         LOGGER.debug("transports()");
-        model.addAttribute("transports", transportService.findAll());
+        List<Transport> transports = transportService.findAll();
+        transports.get(0);
+        model.addAttribute("transports", transports);
         model.addAttribute("fuels", fuelService.findAll());
         return "transports";
     }
