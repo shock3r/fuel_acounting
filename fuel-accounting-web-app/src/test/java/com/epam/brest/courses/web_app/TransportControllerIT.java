@@ -125,6 +125,19 @@ public class TransportControllerIT {
                 .andExpect(redirectedUrl("/transports"));
     }
 
+    @Test
+    public void shoudOpenNewTransportPageById() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/transport")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("transport"))
+                .andExpect(model().attribute("isNew", true))
+                .andExpect(model().attribute("transport", isA(Transport.class)));
+
+    }
+
     /**
      * Get Date from String.
      *

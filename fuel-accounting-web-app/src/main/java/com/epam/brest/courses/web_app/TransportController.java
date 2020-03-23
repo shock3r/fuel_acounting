@@ -96,6 +96,20 @@ public class TransportController {
     }
 
     /**
+     * Goto add transport page.
+     *
+     * @param model Model.
+     * @return view name.
+     */
+    @GetMapping(value = "/transport")
+    public String gotoAddTransportPage(Model model){
+        LOGGER.debug("gotoAddTransportPage({})", model);
+        model.addAttribute("isNew", true);
+        model.addAttribute("transport", new Transport());
+        return "transport";
+    }
+
+    /**
      * Get fuels map for thymeleaf template.
      *
      * @param fuels List of fuels.

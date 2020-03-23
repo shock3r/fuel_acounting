@@ -47,7 +47,8 @@
                                            class="btn btn-light btn-block"><i
                     class="fa fa-arrow-left"></i></a></li>
         </ul>
-        <span class="navbar-brand text-uppercase mr-auto">Edit transport</span>
+        <span class="navbar-brand text-uppercase mr-auto"
+        th:text="${isNew} ? 'New transport' : 'Edit transport'">Edit transport</span>
     </nav>
 </header>
 
