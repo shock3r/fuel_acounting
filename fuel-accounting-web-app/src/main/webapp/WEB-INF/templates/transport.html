@@ -65,6 +65,7 @@
                               th:action="@{${#httpServletRequest.servletPath}}"
                               th:method="@{post}">
                             <input id="field_transportId"
+                                   type="hidden"
                                    th:field="*{transportId}">
 
                             <div class="form-group">

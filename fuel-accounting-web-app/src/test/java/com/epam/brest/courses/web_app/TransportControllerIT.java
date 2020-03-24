@@ -158,6 +158,15 @@ public class TransportControllerIT {
                 .andExpect(redirectedUrl("/transports"));
     }
 
+    @Test
+    public void shouldDeleteTransportById() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/transport/1/delete")
+        ).andExpect(status().isFound())
+                .andExpect(view().name("redirect:/transports"))
+                .andExpect(redirectedUrl("/transports"));
+    }
+
     /**
      * Get Date from String.
      *

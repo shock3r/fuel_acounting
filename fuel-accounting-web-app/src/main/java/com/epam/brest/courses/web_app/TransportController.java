@@ -124,6 +124,20 @@ public class TransportController {
     }
 
     /**
+     * Delete transport by TransportId.
+     *
+     * @param id TransportId.
+     * @param model model.
+     * @return view name.
+     */
+    @GetMapping(value = "/transport/{id}/delete")
+    public String deleteTransportById(@PathVariable Integer id, Model model){
+        LOGGER.debug("deleteTransportById({}{})", id, model);
+        this.transportService.delete(id);
+        return "redirect:/transports";
+    }
+
+    /**
      * Get fuels map for thymeleaf template.
      *
      * @param fuels List of fuels.
