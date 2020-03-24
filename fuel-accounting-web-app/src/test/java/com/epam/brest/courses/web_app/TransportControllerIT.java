@@ -1,6 +1,7 @@
 package com.epam.brest.courses.web_app;
 
 import com.epam.brest.courses.model.Fuel;
+import com.epam.brest.courses.model.Transport;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static com.epam.brest.courses.constants.FuelConstants.*;
@@ -39,7 +42,7 @@ public class TransportControllerIT {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .build();
     }
@@ -68,23 +71,14 @@ public class TransportControllerIT {
                                 Matchers.hasProperty(TRANSPORT_NAME, Matchers.is("Renault Megane")),
                                 Matchers.hasProperty(TRANSPORT_FUEL_ID, Matchers.is(1)),
                                 //Matchers.hasProperty(TRANSPORT_DATE, Matchers.is(getDateByString("01/01/2020"))),
-                                Matchers.hasProperty(TRANSPORT_DATE, Matchers.instanceOf (Date.class)),
+                                Matchers.hasProperty(TRANSPORT_DATE, Matchers.instanceOf(Date.class)),
                                 Matchers.hasProperty(TRANSPORT_TANK_CAPASITY, Matchers.is(45.d))))));
-    }
-
-    private Date getDateByString(String dateAsString) {
-        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            return dateformat.parse(dateAsString);
-        } catch (Exception ex) {
-            return null;
-        }
     }
 
     @Test
     public void shoudOpenEditTransportPageById() throws Exception {
         mockMvc.perform(
-         MockMvcRequestBuilders.get("/transport/1")
+                MockMvcRequestBuilders.get("/transport/1")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
@@ -108,4 +102,96 @@ public class TransportControllerIT {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/transports"));
     }
 
+    @Test
+    public void shouldUpdateTransport() throws Exception {
+        Transport transport = new Transport()
+                .setTransportId(1)
+                .setTransportName("Volvo")
+                .setFuelId(2)
+                .setTransportDate(getDateByString("2020-01-31"))
+                .setTransportTankCapasity(30.d);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/transport/1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param(TRANSPORT_ID, String.valueOf(transport.getTransportId()))
+                        .param(TRANSPORT_NAME, transport.getTransportName())
+                        .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
+                        .param(TRANSPORT_DATE, getDateAsString(transport.getTransportDate()))
+                        .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
+                        .sessionAttr("transport", transport)
+        ).andExpect(status().isFound())
+                .andExpect(view().name("redirect:/transports"))
+                .andExpect(redirectedUrl("/transports"));
+    }
+
+    @Test
+    public void shoudOpenNewTransportPageById() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/transport")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("transport"))
+                .andExpect(model().attribute("isNew", true))
+                .andExpect(model().attribute("transport", isA(Transport.class)));
+
+    }
+
+    @Test
+    public void shouldAddNewTransport() throws Exception{
+        Transport transport = new Transport()
+                .setTransportName("Nissan")
+                .setFuelId(1)
+                .setTransportDate(getDateByString("2020-01-21"))
+                .setTransportTankCapasity(Double.valueOf("50"));
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/transport")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param(TRANSPORT_NAME, transport.getTransportName())
+                        .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
+                        .param(TRANSPORT_DATE, getDateAsString(transport.getTransportDate()))
+                        .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
+                        .sessionAttr("transport", transport)
+        ).andExpect(status().isFound())
+                .andExpect(view().name("redirect:/transports"))
+                .andExpect(redirectedUrl("/transports"));
+    }
+
+    @Test
+    public void shouldDeleteTransportById() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/transport/1/delete")
+        ).andExpect(status().isFound())
+                .andExpect(view().name("redirect:/transports"))
+                .andExpect(redirectedUrl("/transports"));
+    }
+
+    /**
+     * Get Date from String.
+     *
+     * @param dateAsString String.
+     * @return Date.
+     */
+    private Date getDateByString(String dateAsString) {
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return dateformat.parse(dateAsString);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Get String from Date.
+     *
+     * @param date Date.
+     * @return String.
+     */
+    private String getDateAsString(Date date) {
+        String pattern = "yyyy-MM-dd";
+        DateFormat df = new SimpleDateFormat(pattern);
+        Date today = Calendar.getInstance().getTime();
+        return df.format(today);
+    }
 }
