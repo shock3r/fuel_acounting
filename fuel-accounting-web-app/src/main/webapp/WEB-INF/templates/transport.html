@@ -62,7 +62,7 @@
                         <form id="transportForm"
                               th:object="${transport}"
                               action="transports.html"
-                              th:actrion="@{${#httpServletRequest.servletPath}}"
+                              th:action="@{${#httpServletRequest.servletPath}}"
                               th:method="@{post}">
                             <input id="field_transportId"
                                    th:field="*{transportId}">

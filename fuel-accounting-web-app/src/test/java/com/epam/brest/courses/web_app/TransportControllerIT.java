@@ -138,6 +138,26 @@ public class TransportControllerIT {
 
     }
 
+    @Test
+    public void shouldAddNewTransport() throws Exception{
+        Transport transport = new Transport()
+                .setTransportName("Nissan")
+                .setFuelId(1)
+                .setTransportDate(getDateByString("2020-01-21"))
+                .setTransportTankCapasity(Double.valueOf("50"));
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/transport")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param(TRANSPORT_NAME, transport.getTransportName())
+                        .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
+                        .param(TRANSPORT_DATE, getDateAsString(transport.getTransportDate()))
+                        .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
+                        .sessionAttr("transport", transport)
+        ).andExpect(status().isFound())
+                .andExpect(view().name("redirect:/transports"))
+                .andExpect(redirectedUrl("/transports"));
+    }
+
     /**
      * Get Date from String.
      *

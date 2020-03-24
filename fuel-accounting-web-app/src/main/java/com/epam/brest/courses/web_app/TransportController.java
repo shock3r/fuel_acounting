@@ -105,8 +105,22 @@ public class TransportController {
     public String gotoAddTransportPage(Model model){
         LOGGER.debug("gotoAddTransportPage({})", model);
         model.addAttribute("isNew", true);
-        model.addAttribute("transport", new Transport());
+        model.addAttribute("transport", new Transport().setFuelId(1));
+        model.addAttribute("fuels", this.fuelService.findAll());
         return "transport";
+    }
+
+    /**
+     * Persist new transport into persistence storage.
+     *
+     * @param transport new transport with filled data.
+     * @return view name.
+     */
+    @PostMapping(value = "/transport")
+    public String addTransport(Transport transport){
+        LOGGER.debug("addTransport({})", transport);
+        this.transportService.create(transport);
+        return "redirect:/transports";
     }
 
     /**
