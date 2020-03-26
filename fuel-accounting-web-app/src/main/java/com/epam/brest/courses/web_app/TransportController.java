@@ -4,6 +4,7 @@ import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.service.FuelService;
 import com.epam.brest.courses.service.TransportService;
+import com.epam.brest.courses.util.DateUtilites;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -40,6 +41,8 @@ public class TransportController {
         LOGGER.debug("transports()");
         model.addAttribute("transports", this.transportService.findAll());
         model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
+        model.addAttribute("dateFrom", DateUtilites.getMonthStartDate());
+        model.addAttribute("dateTo", DateUtilites.getMonthEndDate());
         return "transports";
     }
 
@@ -57,6 +60,27 @@ public class TransportController {
         model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
         model.addAttribute("transports",
                 this.transportService.findAllFromDateToDate(dateFrom, dateTo));
+        return "transports";
+    }
+
+    /**
+     * Show transports data by date filter.
+     *
+     * @param dateFrom date from.
+     * @param dateTo date to.
+     * @param model model.
+     * @return view name.
+     */
+    @PostMapping(value = "/transports")
+    public  String findTransportsByDatesPost(@DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam(name = "dateFrom") Date dateFrom,
+                                             @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam(name = "dateTo") Date dateTo,
+                                             Model model){
+        LOGGER.debug("findTransportsByDates({},{},{})", dateFrom, dateTo, model);
+        model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
+        model.addAttribute("transports",
+                this.transportService.findAllFromDateToDate(dateFrom, dateTo));
+        model.addAttribute("dateFrom", DateUtilites.getMonthStartDate());
+        model.addAttribute("dateTo", DateUtilites.getMonthEndDate());
         return "transports";
     }
 
