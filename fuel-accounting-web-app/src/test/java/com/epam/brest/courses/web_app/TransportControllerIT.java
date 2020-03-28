@@ -2,6 +2,7 @@ package com.epam.brest.courses.web_app;
 
 import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.Transport;
+import com.epam.brest.courses.util.DateUtilites;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,27 @@ public class TransportControllerIT {
     }
 
     @Test
+    public void shouldFindTransportInDateRangeByPostMethod() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/transports")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("dateFrom", "2020-01-01")
+                        .param("dateTo", "2020-01-31")
+        ).andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html;charset=UTF-8"))
+                .andExpect(MockMvcResultMatchers.view().name("transports"))
+                .andExpect(MockMvcResultMatchers.model().attribute("transports", org.hamcrest.Matchers.hasItem(
+                        Matchers.allOf(
+                                Matchers.hasProperty(TRANSPORT_ID, Matchers.is(1)),
+                                Matchers.hasProperty(TRANSPORT_NAME, Matchers.is("Renault Megane")),
+                                Matchers.hasProperty(TRANSPORT_FUEL_ID, Matchers.is(1)),
+                                //Matchers.hasProperty(TRANSPORT_DATE, Matchers.is(getDateByString("01/01/2020"))),
+                                Matchers.hasProperty(TRANSPORT_DATE, Matchers.instanceOf(Date.class)),
+                                Matchers.hasProperty(TRANSPORT_TANK_CAPASITY, Matchers.is(45.d))))));
+    }
+
+    @Test
     public void shoudOpenEditTransportPageById() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/transport/1")
@@ -108,7 +130,7 @@ public class TransportControllerIT {
                 .setTransportId(1)
                 .setTransportName("Volvo")
                 .setFuelId(2)
-                .setTransportDate(getDateByString("2020-01-31"))
+                .setTransportDate(DateUtilites.getDateByString("2020-01-31"))
                 .setTransportTankCapasity(30.d);
 
         mockMvc.perform(
@@ -117,7 +139,7 @@ public class TransportControllerIT {
                         .param(TRANSPORT_ID, String.valueOf(transport.getTransportId()))
                         .param(TRANSPORT_NAME, transport.getTransportName())
                         .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
-                        .param(TRANSPORT_DATE, getDateAsString(transport.getTransportDate()))
+                        .param(TRANSPORT_DATE, DateUtilites.getStringByDate(transport.getTransportDate()))
                         .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
                         .sessionAttr("transport", transport)
         ).andExpect(status().isFound())
@@ -143,14 +165,14 @@ public class TransportControllerIT {
         Transport transport = new Transport()
                 .setTransportName("Nissan")
                 .setFuelId(1)
-                .setTransportDate(getDateByString("2020-01-21"))
+                .setTransportDate(DateUtilites.getDateByString("2020-01-21"))
                 .setTransportTankCapasity(Double.valueOf("50"));
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/transport")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param(TRANSPORT_NAME, transport.getTransportName())
                         .param(TRANSPORT_FUEL_ID, String.valueOf(transport.getFuelId()))
-                        .param(TRANSPORT_DATE, getDateAsString(transport.getTransportDate()))
+                        .param(TRANSPORT_DATE, DateUtilites.getStringByDate(transport.getTransportDate()))
                         .param(TRANSPORT_TANK_CAPASITY, String.valueOf(transport.getTransportTankCapasity()))
                         .sessionAttr("transport", transport)
         ).andExpect(status().isFound())
@@ -165,33 +187,5 @@ public class TransportControllerIT {
         ).andExpect(status().isFound())
                 .andExpect(view().name("redirect:/transports"))
                 .andExpect(redirectedUrl("/transports"));
-    }
-
-    /**
-     * Get Date from String.
-     *
-     * @param dateAsString String.
-     * @return Date.
-     */
-    private Date getDateByString(String dateAsString) {
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return dateformat.parse(dateAsString);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
-    /**
-     * Get String from Date.
-     *
-     * @param date Date.
-     * @return String.
-     */
-    private String getDateAsString(Date date) {
-        String pattern = "yyyy-MM-dd";
-        DateFormat df = new SimpleDateFormat(pattern);
-        Date today = Calendar.getInstance().getTime();
-        return df.format(today);
     }
 }

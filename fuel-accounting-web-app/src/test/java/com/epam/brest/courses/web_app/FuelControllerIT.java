@@ -1,6 +1,7 @@
 package com.epam.brest.courses.web_app;
 
 import com.epam.brest.courses.model.Fuel;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -117,6 +118,22 @@ public class FuelControllerIT {
     }
 
     @Test
+    public void shoudRejectUpdateFuelOnLargeFuelName() throws Exception{
+        Fuel fuel = new Fuel()
+                .setFuelId(1)
+                .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE+1));
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/fuel/1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param(FUEL_ID, String.valueOf(fuel.getFuelId()))
+                .param(FUEL_NAME, fuel.getFuelName())
+                .sessionAttr(FUEL_SESSION_ATRIBUTE, fuel)
+        ).andExpect(status().isOk())
+                .andExpect(view().name("fuel"));
+    }
+
+    @Test
     public void shouldOpenNewFuelPage() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/fuel")
@@ -137,6 +154,16 @@ public class FuelControllerIT {
         ).andExpect(status().isFound())
         .andExpect(view().name("redirect:/fuels"))
         .andExpect(redirectedUrl("/fuels"));
+    }
+
+    @Test
+    public void shouldRejectAddNewFuelOnLargeFuelName() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/fuel")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param(FUEL_NAME, RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE+1))
+        ).andExpect(status().isOk())
+                .andExpect(view().name("fuel"));
     }
 
     @Test

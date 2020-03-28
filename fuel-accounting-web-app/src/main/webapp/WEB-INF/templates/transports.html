@@ -18,19 +18,19 @@
 <header>
     <nav class="pl-2 navbar navbar-expand-sm navbar-dark bg-dark text-light  p-0">
         <a href="/" class="navbar-brand"><img src="../../resources/static/img/logo.svg"
-                                                       th:src="@{/resources/static/img/logo.svg}"
-                                                       height="32" width="32" alt="HR"></a>
+                                              th:src="@{/resources/static/img/logo.svg}"
+                                              height="32" width="32" alt="HR"></a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <a class="nav-item nav-link"
-                    href="fuels.html"
-                    th:href="@{/fuels}">Fuels</a>
+                   href="fuels.html"
+                   th:href="@{/fuels}">Fuels</a>
                 <a class="nav-item nav-link active"
-                    href="transports.html"
-                    th:href="@{/transports}">Transports</a>
+                   href="transports.html"
+                   th:href="@{/transports}">Transports</a>
             </ul>
         </div>
     </nav>
@@ -51,6 +51,46 @@
         </ul>
     </nav>
 </header>
+
+<section id="filter">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="filterForm" action="#" th:action="@{/transports}" th:method="post">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="dateFrom">Date from</label>
+                                    <input type="text" class="form-control" name="dateFrom" id="dateFrom"
+                                           placeholder="yyyy-MM-dd"
+                                           th:attr="value=${#dates.format(dateFrom, 'yyyy-MM-dd')}">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="dateTo">Date to</label>
+                                    <input type="text" class="form-control" name="dateTo" id="dateTo"
+                                           placeholder="yyyy-MM-dd"
+                                           th:attr="value=${#dates.format(dateTo, 'yyyy-MM-dd')}">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-outline-secondary">Update</button>
+<!--                            <a href="transport.html"-->
+<!--                               th:href="@{/transports/from/{from}/to/{to}(from=${#dates.format(dateFrom,-->
+<!--                                'yyyy-MM-dd')}, to=${#dates.format(dateTo, 'yyyy-MM-dd')})}"-->
+<!--                               class="btn-sm btn-outline-secondary"-->
+<!--                               title="Edit transport"-->
+<!--                               data-toggle="tooltip"-->
+<!--                               data-placement="top">-->
+<!--                                <i class="fa fa-filter"></i>-->
+<!--                                <span class="d-none d-md-inline">Search</span>-->
+<!--                            </a>-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section id="transport">
     <div class="container-fluid">
@@ -209,6 +249,7 @@
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+
 </script>
 
 </body>
