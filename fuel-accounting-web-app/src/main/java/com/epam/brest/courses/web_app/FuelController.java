@@ -6,10 +6,14 @@ import com.epam.brest.courses.service.FuelDtoService;
 import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import com.epam.brest.courses.web_app.validators.FuelValidator;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +26,9 @@ public class FuelController {
     private final FuelDtoService fuelDtoService;
     private final FuelService fuelService;
 
+    @Autowired
+    private FuelValidator fuelValidator;
+    
     public FuelController(FuelDtoService fuelDtoService, FuelService fuelService) {
         this.fuelDtoService = fuelDtoService;
         this.fuelService = fuelService;
@@ -61,14 +68,21 @@ public class FuelController {
 
     /**
      * Update fuel.
-     * @param fuel fuel.
+     * @param fuel fuel with filled data.
+     * @param result binding result.
      * @return view name.
      */
     @PostMapping(value="fuel/{id}")
-    public String updateFuel(Fuel fuel){
-        LOGGER.debug("updateFuel({})", fuel);
-        this.fuelService.update(fuel);
-        return "redirect:/fuels";
+    public String updateFuel(@Valid Fuel fuel,
+                             BindingResult result){
+        LOGGER.debug("updateFuel({}, {})", fuel, result);
+        fuelValidator.validate(fuel, result);
+        if (result.hasErrors()){
+            return "fuel";
+        } else {
+            this.fuelService.update(fuel);
+            return "redirect:/fuels";
+        }
     }
 
     /**
@@ -87,13 +101,20 @@ public class FuelController {
     /**
      * Persist new fuel into persistence storage.
      * @param fuel new fuel with filled data.
+     * @param result binding result.
      * @return view name.
      */
     @PostMapping(value = "/fuel")
-    public String addNewFuel(Fuel fuel){
-        LOGGER.debug("addNewFuel({})", fuel);
-        this.fuelService.create(fuel);
-        return "redirect:/fuels";
+    public String addNewFuel(@Valid  Fuel fuel,
+                             BindingResult result){
+        LOGGER.debug("addNewFuel({}, {})", fuel, result);
+        fuelValidator.validate(fuel, result);
+        if (result.hasErrors()) {
+            return "fuel";
+        } else {
+            this.fuelService.create(fuel);
+            return "redirect:/fuels";
+        }
     }
 
     /**
