@@ -15,13 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FuelValidatorTest {
 
     private Fuel fuel;
-    private FuelValidator fuelValidator = new FuelValidator();
+    private FuelValidator fuelValidator;
     private BindingResult result;
 
     @BeforeEach
     private void setup() {
         fuel = Mockito.mock(Fuel.class);
         result = new BeanPropertyBindingResult(fuel, "fuel");
+        fuelValidator = new FuelValidator();
     }
 
     @Test

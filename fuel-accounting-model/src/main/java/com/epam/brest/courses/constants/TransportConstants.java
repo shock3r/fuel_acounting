@@ -15,6 +15,7 @@ public class TransportConstants {
     public static final String COLUMN_TRANSPORT_DATE = "transport_date";
 
     public static final int TRANSPORT_NAME_SIZE = 30;
+    public static final int TRANSPORT_TANK_CAPASITY_SIZE = 999;
 
     public static final String DATE_FROM = "dateFrom";
     public static final String DATE_TO = "dateTo";
