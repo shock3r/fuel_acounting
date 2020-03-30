@@ -127,14 +127,18 @@ public class TransportController {
      * @return view name.
      */
     @PostMapping(value = "/transport/{id}")
-    public String updateTransport(@Valid Transport transport,
+    public String updateTransport(Model model,
+                                  @Valid Transport transport,
                                   BindingResult result){
-        LOGGER.debug("updateTransport({}, {})", transport, result);
+        LOGGER.debug("updateTransport({}, {}, {})", model, transport, result);
         transportNameValidator.validate(transport, result);
         transportDateValidator.validate(transport, result);
         transportTankCapasityValidator.validate(transport, result);
         if (result.hasErrors()){
-            return "transport";
+                model.addAttribute("isNew", false);
+                model.addAttribute("transport", transport);
+                model.addAttribute("fuels", this.fuelService.findAll());
+                return "transport";
         } else {
             this.transportService.update(transport);
             return "redirect:/transports";

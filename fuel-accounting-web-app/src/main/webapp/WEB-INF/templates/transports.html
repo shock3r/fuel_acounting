@@ -62,13 +62,13 @@
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="dateFrom">Date from</label>
-                                    <input type="text" class="form-control" name="dateFrom" id="dateFrom"
+                                    <input type="date" class="form-control" name="dateFrom" id="dateFrom"
                                            placeholder="yyyy-MM-dd"
                                            th:attr="value=${#dates.format(dateFrom, 'yyyy-MM-dd')}">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="dateTo">Date to</label>
-                                    <input type="text" class="form-control" name="dateTo" id="dateTo"
+                                    <input type="date" class="form-control" name="dateTo" id="dateTo"
                                            placeholder="yyyy-MM-dd"
                                            th:attr="value=${#dates.format(dateTo, 'yyyy-MM-dd')}">
                                 </div>
