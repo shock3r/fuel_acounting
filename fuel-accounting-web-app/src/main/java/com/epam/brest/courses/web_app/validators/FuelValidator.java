@@ -7,6 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME;
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
 
 @Component
@@ -18,10 +19,10 @@ public class FuelValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "fuelName", "fuelName.empty");
+        ValidationUtils.rejectIfEmpty(errors, FUEL_NAME, "fuelName.empty");
         Fuel fuel = (Fuel) target;
         if (StringUtils.hasLength(fuel.getFuelName()) && fuel.getFuelName().length() > FUEL_NAME_SIZE) {
-            errors.rejectValue("fuelName", "fuelName.maxSize");
+            errors.rejectValue(FUEL_NAME, "fuelName.maxSize");
         }
     }
 }

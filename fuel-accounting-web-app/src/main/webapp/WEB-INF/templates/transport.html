@@ -64,14 +64,25 @@
                               action="transports.html"
                               th:action="@{${#httpServletRequest.servletPath}}"
                               th:method="@{post}">
+
+                            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                                <p>Please fix error below:</p>
+                            </div>
+
                             <input id="field_transportId"
                                    type="hidden"
                                    th:field="*{transportId}">
 
                             <div class="form-group">
-                                <label class="form-control-label" for="field_transportName">Name</label>
-                                <input class="form-control" id="field_transportName" value="Automobile" type="text"
+                                <label class="form-control-label"
+                                       for="field_transportName">Name</label>
+                                <input class="form-control"
+                                       th:class="${#fields.hasErrors('transportName')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="field_transportName" value="Automobile" type="text"
                                        th:field="*{transportName}">
+                                <div th:if="${#fields.hasErrors('transportName')}"
+                                     class="invalid-feedback"
+                                     th:errors="*{transportName}">[errors]</div>
                             </div>
 
                             <div class="form-group">
@@ -89,15 +100,25 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="field_fuelTankCapasity">Fuel tank
                                     capasity</label>
-                                <input class="form-control" id="field_fuelTankCapasity" type="number" value="0" min="0"
-                                         th:value=" ${#numbers.formatDecimal(transport.transportTankCapasity,3,2,'COMMA')}"
+                                <input class="form-control"
+                                       th:class="${#fields.hasErrors('transportTankCapasity')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="field_fuelTankCapasity" type="number" value="0" min="0"
+                                       th:value=" ${#numbers.formatDecimal(transport.transportTankCapasity,3,2,'COMMA')}"
                                        th:field="*{transportTankCapasity}">
+                                <div th:if="${#fields.hasErrors('transportTankCapasity')}"
+                                     class="invalid-feedback"
+                                     th:errors="*{transportTankCapasity}">[errors]</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label" for="field_transportDate">Date</label>
-                                <input class="form-control" id="field_transportDate" type="text"
+                                <input class="form-control"
+                                       th:class="${#fields.hasErrors('transportDate')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="field_transportDate" type="text"
                                        th:value="${#dates.format(transport.transportDate, 'yyyy-MM-dd')}"
-                                th:field="*{transportDate}">
+                                       th:field="*{transportDate}">
+                                <div th:if="${#fields.hasErrors('transportDate')}"
+                                     class="invalid-feedback"
+                                     th:errors="*{transportDate}">[errors]</div>
 
                             </div>
                             <div class="d-flex justify-content-end">

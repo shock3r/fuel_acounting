@@ -5,16 +5,22 @@ import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.service.FuelService;
 import com.epam.brest.courses.service.TransportService;
 import com.epam.brest.courses.util.DateUtilites;
+import com.epam.brest.courses.web_app.validators.TransportDateValidator;
+import com.epam.brest.courses.web_app.validators.TransportNameValidator;
+import com.epam.brest.courses.web_app.validators.TransportTankCapasityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -25,6 +31,12 @@ public class TransportController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransportController.class);
     private final TransportService transportService;
     private final FuelService fuelService;
+    @Autowired
+    private TransportNameValidator transportNameValidator;
+    @Autowired
+    private TransportTankCapasityValidator transportTankCapasityValidator;
+    @Autowired
+    private TransportDateValidator transportDateValidator;
 
     public TransportController(TransportService transportService, FuelService fuelService) {
         this.transportService = transportService;
@@ -55,7 +67,9 @@ public class TransportController {
      * @return view name.
      */
     @GetMapping(value = "/transports/from/{dateFrom}/to/{dateTo}")
-    public  String findTransportsByDates(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo, Model model){
+    public  String findTransportsByDates(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
+                                         @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo,
+                                         Model model){
         LOGGER.debug("findTransportsByDates({},{},{})", dateFrom, dateTo, model);
         model.addAttribute("fuelsMap", getFuelsMap(this.fuelService.findAll()));
         model.addAttribute("transports",
@@ -107,16 +121,24 @@ public class TransportController {
     }
 
     /**
-     * Uodate transport.
-     *
-     * @param transport transport,
+     * Update transport.
+     * @param transport transport with filled data.
+     * @param result binding result.
      * @return view name.
      */
     @PostMapping(value = "/transport/{id}")
-    public String updateTransport(Transport transport){
-        LOGGER.debug("updateTransport({}})", transport);
-        this.transportService.update(transport);
-        return "redirect:/transports";
+    public String updateTransport(@Valid Transport transport,
+                                  BindingResult result){
+        LOGGER.debug("updateTransport({}, {})", transport, result);
+        transportNameValidator.validate(transport, result);
+        transportDateValidator.validate(transport, result);
+        transportTankCapasityValidator.validate(transport, result);
+        if (result.hasErrors()){
+            return "transport";
+        } else {
+            this.transportService.update(transport);
+            return "redirect:/transports";
+        }
     }
 
     /**
