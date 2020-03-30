@@ -113,7 +113,7 @@
                                 <label class="form-control-label" for="field_transportDate">Date</label>
                                 <input class="form-control"
                                        th:class="${#fields.hasErrors('transportDate')} ? 'form-control is-invalid' : 'form-control'"
-                                       id="field_transportDate" type="text"
+                                       id="field_transportDate" type="date"
                                        th:value="${#dates.format(transport.transportDate, 'yyyy-MM-dd')}"
                                        th:field="*{transportDate}">
                                 <div th:if="${#fields.hasErrors('transportDate')}"
