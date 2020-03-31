@@ -1,7 +1,6 @@
 package com.epam.brest.courses.dao;
 
 
-import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.Transport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +37,8 @@ public class TransportDaoJdbc implements TransportDao {
     private String findAllByFuelId;
     @Value("${transport.findById}")
     private String findById;
-    @Value("${transport.select}")
-    private String selectSql;
+//    @Value("${transport.select}")
+//    private String selectSql;
     @Value("${transport.create}")
     private String createSql;
     @Value("${transport.update}")
@@ -61,9 +60,7 @@ public class TransportDaoJdbc implements TransportDao {
 
     @Override
     public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
-        LOGGER.debug("findAllFromDateToDate(dateFrom:{}, dateTo:{})",dateFrom,dateTo);
-        java.util.Date utilDate = new java.util.Date();
-        java.sql.Date sqlDate = new java.sql.Date(dateFrom.getTime());
+        LOGGER.debug("findAllFromDateToDate(dateFrom:{}, dateTo:{})", dateFrom, dateTo);
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue(DATE_FROM, dateFrom, Types.DATE);
         namedParameters.addValue(DATE_TO, dateTo, Types.DATE);

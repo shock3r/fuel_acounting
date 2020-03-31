@@ -22,7 +22,7 @@ public class TransportDateValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors, TRANSPORT_DATE, "transportDate.empty");
         Transport transport = (Transport) target;
         try {
-            String dateAsString = DateUtilites.getStringByDate(transport.getTransportDate());
+            DateUtilites.getStringByDate(transport.getTransportDate());
         } catch (Exception ex){
             errors.rejectValue(TRANSPORT_DATE, "transportDate.datePattern");
         }

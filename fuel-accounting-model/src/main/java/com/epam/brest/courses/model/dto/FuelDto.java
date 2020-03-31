@@ -1,7 +1,5 @@
 package com.epam.brest.courses.model.dto;
 
-import com.epam.brest.courses.model.Fuel;
-
 /**
  * POJO FuelDto for model.
  */
