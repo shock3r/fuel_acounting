@@ -1,6 +1,5 @@
 package com.epam.brest.courses.dao;
 
-import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.dto.FuelDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
