@@ -2,10 +2,12 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.dto.FuelDto;
+import com.epam.brest.courses.rest_app.exception.FuelNotFoundException;
 import com.epam.brest.courses.service.FuelDtoService;
 import com.epam.brest.courses.service.FuelService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,9 +21,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class FuelControllerTest {
@@ -37,7 +43,7 @@ public class FuelControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(fuelController)
                 .build();
     }
@@ -77,6 +83,20 @@ public class FuelControllerTest {
         Mockito.verify(fuelService).findById(1);
     }
 
+    @Test
+    public void shouldNotGetFuelById() throws Exception{
+        Mockito.when(fuelService.findById(99)).thenReturn(createEmptyFuel());
+        Exception exception = assertThrows(NestedServletException.class, () -> {
+            mockMvc.perform(
+                    MockMvcRequestBuilders.get("/fuel/99")).andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"));
+        });
+        String expectedMessage = "Fuel is not found";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
     /**
      * Create mock FuelDto with data by index.
      * @param index int.
@@ -101,6 +121,15 @@ public class FuelControllerTest {
                 .setFuelName("test"+index);
         List<Fuel> fuels = new ArrayList<Fuel>();
         fuels.add(fuel);
+        return Optional.ofNullable(DataAccessUtils.uniqueResult(fuels));
+    }
+
+    /**
+     * Create mock Optional<Fuel> with data by index.
+     * @return Optional<Fuel>.
+     */
+    private Optional<Fuel> createEmptyFuel() {
+        List<Fuel> fuels = new ArrayList<Fuel>();
         return Optional.ofNullable(DataAccessUtils.uniqueResult(fuels));
     }
 }

@@ -38,6 +38,8 @@ public class FuelDaoJdbc implements FuelDao {
     private String deleteSql;
     @Value("${fuel.findById}")
     private String findByIdSql;
+    @Value("${fuel.findCountByName}")
+    private String findCountByNameSql;
 
     private final FuelRowMapper fuelRowMapper = new FuelRowMapper();
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -63,12 +65,27 @@ public class FuelDaoJdbc implements FuelDao {
     @Override
     public Integer create(Fuel fuel) {
         LOGGER.debug("create(fuel:{})", fuel);
+        if (!isNameUnique(fuel)) {
+            throw new IllegalArgumentException("Fuel with same name already exits in DB.");
+        }
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue(FUEL_ID, fuel.getFuelId());
         mapSqlParameterSource.addValue(FUEL_NAME, fuel.getFuelName());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(createSql, mapSqlParameterSource,keyHolder);
         return keyHolder.getKey().intValue();
+    }
+
+    /**
+     * Find count of fuel name in table fuels.
+     * @param fuel Fuel.
+     * @return numbers of rows find in table fuels.
+     */
+    private boolean isNameUnique(Fuel fuel) {
+        LOGGER.debug("isNameUnique({})", fuel);
+        return namedParameterJdbcTemplate.queryForObject(findCountByNameSql,
+                new MapSqlParameterSource(FUEL_NAME, fuel.getFuelName()),
+                Integer.class) == 0;
     }
 
     @Override

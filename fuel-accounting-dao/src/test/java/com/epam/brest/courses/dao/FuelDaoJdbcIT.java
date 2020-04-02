@@ -58,6 +58,32 @@ public class FuelDaoJdbcIT {
     }
 
     @Test
+    public void shouldNotCreateFuelWithTheSameName(){
+        // given
+        String fuelName = RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE);
+        Fuel firstNewFuel = new Fuel()
+                .setFuelName(fuelName);
+        Integer firstId = fuelDao.create(firstNewFuel);
+        assertNotNull(firstId);
+
+        Optional<Fuel> firstFuelOptional = fuelDao.findById(firstId);
+        Assertions.assertTrue(firstFuelOptional.isPresent());
+
+        // when
+        Fuel secondNewFuel = new Fuel()
+                .setFuelName(fuelName);
+        Integer secondId;
+        try {
+            secondId = fuelDao.create(secondNewFuel);
+        } catch (IllegalArgumentException ex) {
+           secondId = null;
+        }
+        // then
+        assertNull(secondId);
+
+    }
+
+    @Test
     public void shouldUpdateFuel(){
         // given
         Fuel fuel = new Fuel()

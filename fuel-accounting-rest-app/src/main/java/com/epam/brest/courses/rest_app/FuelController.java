@@ -2,18 +2,15 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.model.dto.FuelDto;
+import com.epam.brest.courses.rest_app.exception.FuelNotFoundException;
 import com.epam.brest.courses.service.FuelDtoService;
 import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collection;
-import java.util.Optional;
-
 /**
  * Fuel rest controller.
  */
@@ -52,13 +49,21 @@ public class FuelController {
      */
     @GetMapping(value="/fuel/{id}")
     public Fuel findFuelById(@PathVariable Integer id){
-        LOGGER.debug("gotoEditFuelPage({})", id);
-        Optional<Fuel> optionalFuel = fuelService.findById(id);
-        if (optionalFuel.isPresent()){
-            return optionalFuel.get();
-        } else {
-            return new Fuel();
-        }
+        LOGGER.debug("findFuelById({})", id);
+        return fuelService.findById(id).orElseThrow(() -> new FuelNotFoundException(id));
+    }
+
+    /**
+     * Add new Fuel into DB.
+     * @param fuelName String fuel name.
+     * @return Integer number of items that was inserted.
+     */
+    @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
+    public Integer addFuel(@RequestBody String fuelName){
+        LOGGER.debug("addFuel({})", fuelName);
+        return fuelService.create(
+                new Fuel().
+                        setFuelName(fuelName));
     }
 
 //    /**
