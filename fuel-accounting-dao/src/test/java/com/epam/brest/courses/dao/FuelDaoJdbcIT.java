@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
@@ -67,19 +69,14 @@ public class FuelDaoJdbcIT {
         assertNotNull(firstId);
 
         Optional<Fuel> firstFuelOptional = fuelDao.findById(firstId);
-        Assertions.assertTrue(firstFuelOptional.isPresent());
+        assertTrue(firstFuelOptional.isPresent());
 
         // when
         Fuel secondNewFuel = new Fuel()
                 .setFuelName(fuelName);
-        Integer secondId;
-        try {
-            secondId = fuelDao.create(secondNewFuel);
-        } catch (IllegalArgumentException ex) {
-           secondId = null;
-        }
+
         // then
-        assertNull(secondId);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fuelDao.create(secondNewFuel));
 
     }
 
@@ -92,7 +89,7 @@ public class FuelDaoJdbcIT {
         assertNotNull(id);
 
         Optional<Fuel> fuelOptional = fuelDao.findById(id);
-        Assertions.assertTrue(fuelOptional.isPresent());
+        assertTrue(fuelOptional.isPresent());
 
         fuelOptional.get()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
@@ -103,7 +100,7 @@ public class FuelDaoJdbcIT {
         // then
         assertTrue(1 == result);
         Optional<Fuel> updatedFuelOptional = fuelDao.findById(id);
-        Assertions.assertTrue(updatedFuelOptional.isPresent());
+        assertTrue(updatedFuelOptional.isPresent());
         assertEquals(updatedFuelOptional.get().getFuelId(), id);
         assertEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
     }

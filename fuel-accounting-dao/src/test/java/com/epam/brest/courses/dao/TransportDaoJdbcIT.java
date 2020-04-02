@@ -21,9 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
 public class TransportDaoJdbcIT {
 
-    public static final String DATE_FROM = "01/03/2020";
-    public static final String DATE_FOR_TRANSPORT2 = "02/03/2020";
-    public static final String DATE_TO = "08/03/2020";
+    public static final String DATE_FROM = "2020-03-01";
+    public static final String DATE_FOR_TRANSPORT2 = "2020-03-02";
+    public static final String DATE_TO = "2020-03-08";
+    public static final String PATTERN = "yyyy-MM-dd";
     private final TransportDao transportDao;
 
     @Autowired
@@ -39,7 +40,7 @@ public class TransportDaoJdbcIT {
     }
 
     private Date getDateByString(String dateAsString) {
-        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateformat = new SimpleDateFormat(PATTERN);
         try {
             return dateformat.parse(dateAsString);
         } catch (Exception ex) {

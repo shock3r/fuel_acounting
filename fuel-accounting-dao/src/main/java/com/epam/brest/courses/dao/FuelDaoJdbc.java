@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.support.DataAccessUtils;
@@ -20,7 +17,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import static com.epam.brest.courses.constants.FuelConstants.*;
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_ID;
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME;
+import static com.epam.brest.courses.constants.FuelConstants.COLUMN_FUEL_ID;
+import static com.epam.brest.courses.constants.FuelConstants.COLUMN_FUEL_NAME;
 
 /**
  * FUEL DAO JDBC implementation.
@@ -73,7 +73,7 @@ public class FuelDaoJdbc implements FuelDao {
         mapSqlParameterSource.addValue(FUEL_NAME, fuel.getFuelName());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(createSql, mapSqlParameterSource,keyHolder);
-        return keyHolder.getKey().intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     /**
@@ -81,6 +81,7 @@ public class FuelDaoJdbc implements FuelDao {
      * @param fuel Fuel.
      * @return numbers of rows find in table fuels.
      */
+    @SuppressWarnings("ConstantConditions")
     private boolean isNameUnique(Fuel fuel) {
         LOGGER.debug("isNameUnique({})", fuel);
         return namedParameterJdbcTemplate.queryForObject(findCountByNameSql,
@@ -105,7 +106,7 @@ public class FuelDaoJdbc implements FuelDao {
         return namedParameterJdbcTemplate.update(deleteSql, params);
     }
 
-    private class FuelRowMapper implements RowMapper<Fuel> {
+    private static class FuelRowMapper implements RowMapper<Fuel> {
         @Override
         public Fuel mapRow(ResultSet resultSet, int i) throws SQLException {
             Fuel fuel = new Fuel();

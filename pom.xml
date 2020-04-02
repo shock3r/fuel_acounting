@@ -31,6 +31,7 @@
         <commons-lang3.version>3.8</commons-lang3.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jackson-databind.version>2.9.10.3</jackson-databind.version>
+        <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
     </properties>
 
     <distributionManagement>
@@ -132,6 +133,16 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${validation-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b08</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -311,6 +322,12 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.5</version>
@@ -350,7 +367,9 @@
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
                             <failOnViolation>false</failOnViolation>
-                            <linkXRef>false</linkXRef>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <!-- change to 'error' to be more strict about following checkstyle conventions -->
+                            <violationSeverity>warn</violationSeverity>
                         </configuration>
                         <goals>
                             <goal>check</goal>
