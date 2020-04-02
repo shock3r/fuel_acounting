@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-dao.xml", "classpath:dao.xml"})
@@ -58,6 +60,27 @@ public class FuelDaoJdbcIT {
     }
 
     @Test
+    public void shouldNotCreateFuelWithTheSameName(){
+        // given
+        String fuelName = RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE);
+        Fuel firstNewFuel = new Fuel()
+                .setFuelName(fuelName);
+        Integer firstId = fuelDao.create(firstNewFuel);
+        assertNotNull(firstId);
+
+        Optional<Fuel> firstFuelOptional = fuelDao.findById(firstId);
+        assertTrue(firstFuelOptional.isPresent());
+
+        // when
+        Fuel secondNewFuel = new Fuel()
+                .setFuelName(fuelName);
+
+        // then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fuelDao.create(secondNewFuel));
+
+    }
+
+    @Test
     public void shouldUpdateFuel(){
         // given
         Fuel fuel = new Fuel()
@@ -66,7 +89,7 @@ public class FuelDaoJdbcIT {
         assertNotNull(id);
 
         Optional<Fuel> fuelOptional = fuelDao.findById(id);
-        Assertions.assertTrue(fuelOptional.isPresent());
+        assertTrue(fuelOptional.isPresent());
 
         fuelOptional.get()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
@@ -77,7 +100,7 @@ public class FuelDaoJdbcIT {
         // then
         assertTrue(1 == result);
         Optional<Fuel> updatedFuelOptional = fuelDao.findById(id);
-        Assertions.assertTrue(updatedFuelOptional.isPresent());
+        assertTrue(updatedFuelOptional.isPresent());
         assertEquals(updatedFuelOptional.get().getFuelId(), id);
         assertEquals(updatedFuelOptional.get().getFuelName(), fuelOptional.get().getFuelName());
     }

@@ -17,11 +17,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.Types;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-import static com.epam.brest.courses.constants.FuelConstants.FUEL_ID;
 import static com.epam.brest.courses.constants.TransportConstants.*;
-
 /**
  * TRANSPORT DAO JDBC implementation.
  */
@@ -37,8 +36,6 @@ public class TransportDaoJdbc implements TransportDao {
     private String findAllByFuelId;
     @Value("${transport.findById}")
     private String findById;
-//    @Value("${transport.select}")
-//    private String selectSql;
     @Value("${transport.create}")
     private String createSql;
     @Value("${transport.update}")
@@ -53,9 +50,7 @@ public class TransportDaoJdbc implements TransportDao {
     @Override
     public List<Transport> findAll() {
         LOGGER.debug("findAll()");
-        List<Transport> transports =
-                namedParameterJdbcTemplate.query(findAll, BeanPropertyRowMapper.newInstance(Transport.class));
-        return transports;
+        return namedParameterJdbcTemplate.query(findAll, BeanPropertyRowMapper.newInstance(Transport.class));
     }
 
     @Override
@@ -64,20 +59,17 @@ public class TransportDaoJdbc implements TransportDao {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue(DATE_FROM, dateFrom, Types.DATE);
         namedParameters.addValue(DATE_TO, dateTo, Types.DATE);
-        SqlParameterSource sqlParameterSource = namedParameters;
+        return namedParameterJdbcTemplate.query(findAllFromDateToDate,
+                namedParameters, BeanPropertyRowMapper.newInstance(Transport.class));
 
-        List<Transport> transports =
-                namedParameterJdbcTemplate.query(findAllFromDateToDate, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
-        return transports;
     }
 
     @Override
     public List<Transport> findByFuelId(Integer fuelId) {
         LOGGER.debug("findByFuelId(id:{})", fuelId);
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(FUEL_ID, fuelId);
-        List<Transport> transports =
-                namedParameterJdbcTemplate.query(findAllByFuelId, sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
-        return transports;
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(TRANSPORT_FUEL_ID, fuelId);
+        return namedParameterJdbcTemplate.query(findAllByFuelId,
+                sqlParameterSource, BeanPropertyRowMapper.newInstance(Transport.class));
     }
 
     @Override
@@ -95,13 +87,13 @@ public class TransportDaoJdbc implements TransportDao {
         LOGGER.debug("create(transport:{})", transport);
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue(TRANSPORT_NAME, transport.getTransportName());
-        parameters.addValue(FUEL_ID, transport.getFuelId());
+        parameters.addValue(TRANSPORT_FUEL_ID, transport.getFuelId());
         parameters.addValue(TRANSPORT_TANK_CAPASITY, transport.getTransportTankCapasity());
         parameters.addValue(TRANSPORT_DATE, transport.getTransportDate());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(createSql, parameters, keyHolder);
-        return keyHolder.getKey().intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     @Override

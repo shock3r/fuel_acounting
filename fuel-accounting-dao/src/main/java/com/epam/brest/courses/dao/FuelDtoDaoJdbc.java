@@ -33,8 +33,7 @@ public class FuelDtoDaoJdbc implements FuelDtoDao {
     @Override
     public List<FuelDto> findAllWithFuelSum() {
         LOGGER.debug("findAllWithFuelSum()");
-        List<FuelDto> fuels = namedParameterJdbcTemplate.query(findAllWithFuelTankCapasitySum,
+        return namedParameterJdbcTemplate.query(findAllWithFuelTankCapasitySum,
                 BeanPropertyRowMapper.newInstance(FuelDto.class));
-        return fuels;
     }
 }
