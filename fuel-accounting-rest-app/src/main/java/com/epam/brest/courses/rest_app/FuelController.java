@@ -8,14 +8,12 @@ import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collection;
 /**
  * Fuel rest controller.
  */
 @RestController(value = "/api")
-@EnableSwagger2
 public class FuelController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FuelController.class);

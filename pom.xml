@@ -109,16 +109,6 @@
                 <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>2.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>2.9.2</version>
-            </dependency>
-            <dependency>
                 <groupId>org.thymeleaf</groupId>
                 <artifactId>thymeleaf-spring5</artifactId>
                 <version>${thymeleaf-spring5.version}</version>
@@ -370,6 +360,15 @@
                             <logViolationsToConsole>true</logViolationsToConsole>
                             <!-- change to 'error' to be more strict about following checkstyle conventions -->
                             <violationSeverity>warn</violationSeverity>
+                            <checkstyleRules>
+                                <module name="Checker">
+                                    <module name="JavadocPackage"/>
+                                    <module name="TreeWalker">
+                                        <module name="ConstantName"/>
+                                        <module name="EmptyBlock"/>
+                                    </module>
+                                </module>
+                            </checkstyleRules>
                         </configuration>
                         <goals>
                             <goal>check</goal>
@@ -389,6 +388,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                </configuration>
             </plugin>
 
             <!--<plugin>-->
