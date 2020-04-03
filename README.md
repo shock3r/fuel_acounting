@@ -15,8 +15,16 @@ Goto Project folder and execute
     mvn jetty:run -pl fuel-accounting-web-app
 
 ## Connect to web application using localhost or 127.0.0.1 adress and 8081 port
-    Applicatin was tested on browser google chrome 80.0.3987.132
+    Application was tested on browser google chrome 80.0.3987.132
     in path field use adress: "http://localhost:8081/".
     this adress will redirect you on fuels page: "http://localhost:8081/fuels"
-    For date moment 2020_03_23 10:30 you can use http://localhost:8081/fuel" and
-    "http://localhost:8081/fuels", "http://localhost:8081/transports" (cant resolve Fuels type column yet), + transport edit buttun that        will redirect to "http://localhost:8081/transport/transportId" page.
+    For date moment 2020_04_03 23:23 monolite web application is ready
+    
+ ## Run jetty web server
+     mvn jetty:run -pl fuel-accounting-rest-app 
+     for testing rest services
+     For date moment 2020_04_03 23:23 you can use:
+     get http://localhost:8081//fuel_dtos 
+     get http://localhost:8081//fuels
+     get http://localhost:8081//fuel/{id}
+     post http://localhost:8081/fuels 
