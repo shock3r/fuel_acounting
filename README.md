@@ -20,11 +20,11 @@ Goto Project folder and execute
     this adress will redirect you on fuels page: "http://localhost:8081/fuels"
     For date moment 2020_04_03 23:23 monolite web application is ready
     
- ## Run jetty web server
+ ## Run jetty rest server
      mvn jetty:run -pl fuel-accounting-rest-app 
      for testing rest services
      For date moment 2020_04_03 23:23 you can use:
-     get http://localhost:8081//fuel_dtos 
-     get http://localhost:8081//fuels
-     get http://localhost:8081//fuel/{id}
-     post http://localhost:8081/fuels 
+     get http:/localhost:8088/fuel_dtos 
+     get http:/localhost:8088/fuels
+     get http:/localhost:8088/fuel/{id}
+     post http:/localhost:8088/fuels 
