@@ -168,10 +168,10 @@
 <script>
 
     $('#deleteDialog').on('show.bs.modal', function (event) {
-        var target = $(event.relatedTarget)
-        $(this).find('.modal-body').text('Please confirm delete fuel: "' + target.data('name') + '"')
+        var target = $(event.relatedTarget);
+        $(this).find('.modal-body').text('Please confirm delete fuel: "' + target.data('name') + '"');
         document.getElementById('deleteUrl').href = '/fuel/' + target.data('id') + '/delete';
-    })
+    });
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
