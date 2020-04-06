@@ -41,6 +41,7 @@ public class FuelDaoJdbcIT {
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
         Integer id = fuelDao.create(fuel);
+        assertNotNull(id);
 
         // when
         Optional<Fuel> fuelOptional = fuelDao.findById(id);

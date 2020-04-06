@@ -65,7 +65,7 @@ public class FuelControllerTest {
     public void shouldGetFuelById() throws Exception{
         Mockito.when(fuelService.findById(1)).thenReturn(createOptionalFuel(1));
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/fuel/1")
+                MockMvcRequestBuilders.get("/fuels/1")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
@@ -79,7 +79,7 @@ public class FuelControllerTest {
         Mockito.when(fuelService.findById(99)).thenReturn(createEmptyFuel());
         Exception exception = assertThrows(NestedServletException.class, () -> {
             mockMvc.perform(
-                    MockMvcRequestBuilders.get("/fuel/99")).andDo(MockMvcResultHandlers.print())
+                    MockMvcRequestBuilders.get("/fuels/99")).andDo(MockMvcResultHandlers.print())
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"));
         });

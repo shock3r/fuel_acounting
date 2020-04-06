@@ -34,8 +34,19 @@ Pretty print json:
 curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp       
 ```
 ### fuels
+
 #### findAll
     curl --location --request GET 'localhost:8088/fuels' | json_pp
+
+
+#### create
+    curl --location --request POST 'localhost:8088/fuels/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "fuelId": null,
+        "fuelName": "PostmanFuel"
+    }'
+
 #### findById(fuelId)
     curl --location --request GET 'localhost:8088/fuel/1'| json_pp
     

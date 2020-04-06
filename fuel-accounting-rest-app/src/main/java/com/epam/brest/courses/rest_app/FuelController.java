@@ -40,9 +40,9 @@ public class FuelController {
      * @param id fuel id.
      * @return json fuel.
      */
-    @GetMapping(value="/fuel/{id}")
-    public Fuel findFuelById(@PathVariable Integer id){
-        LOGGER.debug("findFuelById({})", id);
+    @GetMapping(value="/fuels/{id}")
+    public Fuel findById(@PathVariable Integer id){
+        LOGGER.debug("findById({})", id);
         return fuelService.findById(id).orElseThrow(() -> new FuelNotFoundException(id));
     }
 

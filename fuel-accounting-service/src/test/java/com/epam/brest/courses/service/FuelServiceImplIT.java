@@ -31,11 +31,12 @@ public class FuelServiceImplIT {
     }
 
     @Test
-    public void shouldfindFuelById(){
+    public void shouldFindFuelById(){
         // given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
         Integer id = fuelService.create(fuel);
+        assertNotNull(id);
 
         // when
         Optional<Fuel> fuelOptional = fuelService.findById(id);
