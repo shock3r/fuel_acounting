@@ -26,8 +26,7 @@ import java.util.Optional;
 
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -172,8 +171,17 @@ public class FuelControllerIT {
             return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
-        public int update(Fuel fuel) {
-            return 0;
+        public int update(Fuel fuel) throws Exception {
+            LOGGER.debug("update({})", fuel);
+            String updateFuelJson = objectMapper.writeValueAsString(fuel);
+            MockHttpServletResponse response =
+                    mockMvc.perform(put(FUELS_ENDPOINT)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(updateFuelJson)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
         public int delete(Integer fuelId) {

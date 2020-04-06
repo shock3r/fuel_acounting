@@ -58,6 +58,18 @@ public class FuelController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
+    /**
+     * Update fuel in DB.
+     * @param fuel Fuel with data.
+     * @return ResponseEntity<Integer> number of updated rows,
+     */
+    @PutMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Integer> updateFuel(@RequestBody Fuel fuel){
+        LOGGER.debug("updateFuel({})", fuel);
+        int result = fuelService.update(fuel);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 //    /**
 //     * Add new Fuel into DB.
 //     * @param fuelName String fuel name.
