@@ -2,6 +2,7 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -64,11 +66,20 @@ public class FuelControllerIT {
     }
 
     @Test
-    public void shouldfindFuelById() {
+    public void shouldCreateFuel() throws Exception {
+        Fuel fuel = new Fuel()
+                .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
+        Integer id = fuelService.create(fuel);
+        assertNotNull(id);
+    }
+
+    @Test
+    public void shouldfindFuelById() throws Exception {
         // given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
         Integer id = fuelService.create(fuel);
+        assertNotNull(id);
 
         // when
         Optional<Fuel> fuelOptional = fuelService.findById(id);
@@ -80,15 +91,7 @@ public class FuelControllerIT {
     }
 
     @Test
-    public void shouldCreateFuel() {
-        Fuel fuel = new Fuel()
-                .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
-        Integer id = fuelService.create(fuel);
-        assertNotNull(id);
-    }
-
-    @Test
-    public void shouldUpdateFuel() {
+    public void shouldUpdateFuel() throws Exception {
         // given
         Fuel fuel = new Fuel()
                 .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
@@ -147,12 +150,26 @@ public class FuelControllerIT {
             return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Fuel>>() {});
         }
 
-        public Optional<Fuel> findById(Integer fuelId) {
-            return Optional.empty();
+        public Optional<Fuel> findById(Integer fuelId) throws Exception {
+            LOGGER.debug("findById({})", fuelId);
+            MockHttpServletResponse response = mockMvc.perform(get(FUELS_ENDPOINT + "/" + fuelId)
+                    .accept(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return Optional.of(objectMapper.readValue(response.getContentAsString(), Fuel.class));
         }
 
-        public Integer create(Fuel fuel) {
-            return null;
+        public Integer create(Fuel fuel) throws Exception {
+            LOGGER.debug("create({})", fuel);
+            String json = objectMapper.writeValueAsString(fuel);
+            MockHttpServletResponse response =
+                    mockMvc.perform(post(FUELS_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
         public int update(Fuel fuel) {

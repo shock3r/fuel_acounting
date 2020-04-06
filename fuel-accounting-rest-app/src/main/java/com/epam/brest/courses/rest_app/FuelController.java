@@ -5,6 +5,8 @@ import com.epam.brest.courses.rest_app.exception.FuelNotFoundException;
 import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -46,15 +48,29 @@ public class FuelController {
 
     /**
      * Add new Fuel into DB.
-     * @param fuelName String fuel name.
-     * @return Integer number of items that was inserted.
+     * @param fuel Fuel.
+     * @return ResponseEntity<Integer> created fuel id and http status 200.
      */
     @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
-    public Integer add(@RequestBody String fuelName){
-        LOGGER.debug("add({})", fuelName);
-        return fuelService.create(
-                new Fuel()
-                        .setFuelName(fuelName));
+    public ResponseEntity<Integer> createFuel(@RequestBody Fuel fuel){
+        LOGGER.debug("createFuel({})", fuel);
+        Integer id = fuelService.create(fuel);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
+
+//    /**
+//     * Add new Fuel into DB.
+//     * @param fuelName String fuel name.
+//     * @return Integer number of items that was inserted.
+//     */
+//    @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
+//    public Integer add(@RequestBody String fuelName){
+//        LOGGER.debug("add({})", fuelName);
+//        return fuelService.create(
+//                new Fuel()
+//                        .setFuelName(fuelName));
+//    }
+
+
 
 }
