@@ -70,6 +70,18 @@ public class FuelController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * Delete fuel from DB.
+     * @param id fuel id.
+     * @return ResponseEntity<Integer> number iof rows deleted.
+     * */
+    @DeleteMapping(path = "/fuels/{id}", produces = "application/json")
+    public ResponseEntity<Integer> deleteFue(@PathVariable Integer id){
+        LOGGER.debug("Delete({})", id);
+        int result = fuelService.delete(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 //    /**
 //     * Add new Fuel into DB.
 //     * @param fuelName String fuel name.

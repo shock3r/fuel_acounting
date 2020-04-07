@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -184,8 +185,14 @@ public class FuelControllerIT {
             return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
-        public int delete(Integer fuelId) {
-            return 0;
+        public int delete(Integer fuelId) throws Exception {
+            LOGGER.debug("Delete({})", fuelId);
+            MockHttpServletResponse response =
+                   mockMvc.perform(MockMvcRequestBuilders.delete(FUELS_ENDPOINT + "/" + fuelId)
+                   .accept(MediaType.APPLICATION_JSON)
+                   ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
     }
 

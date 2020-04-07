@@ -57,6 +57,10 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
         "fuelId": 1,
         "fuelName": "AI95"
     }'
+
+#### delete
+    curl --location --request DELETE 'localhost:8088/fuels/3'
+
 ## Start monolite web application using Maven Jetty plugin
  ```
  mvn jetty:run -pl fuel-accounting-web-app
