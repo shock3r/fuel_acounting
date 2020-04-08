@@ -5,6 +5,8 @@ import com.epam.brest.courses.rest_app.exception.FuelNotFoundException;
 import com.epam.brest.courses.service.FuelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -38,23 +40,61 @@ public class FuelController {
      * @param id fuel id.
      * @return json fuel.
      */
-    @GetMapping(value="/fuel/{id}")
-    public Fuel findFuelById(@PathVariable Integer id){
-        LOGGER.debug("findFuelById({})", id);
+    @GetMapping(value="/fuels/{id}")
+    public Fuel findById(@PathVariable Integer id){
+        LOGGER.debug("findById({})", id);
         return fuelService.findById(id).orElseThrow(() -> new FuelNotFoundException(id));
     }
 
     /**
      * Add new Fuel into DB.
-     * @param fuelName String fuel name.
-     * @return Integer number of items that was inserted.
+     * @param fuel Fuel.
+     * @return ResponseEntity<Integer> created fuel id and http status 200.
      */
     @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
-    public Integer add(@RequestBody String fuelName){
-        LOGGER.debug("add({})", fuelName);
-        return fuelService.create(
-                new Fuel()
-                        .setFuelName(fuelName));
+    public ResponseEntity<Integer> createFuel(@RequestBody Fuel fuel){
+        LOGGER.debug("createFuel({})", fuel);
+        Integer id = fuelService.create(fuel);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
+
+    /**
+     * Update fuel in DB.
+     * @param fuel Fuel with data.
+     * @return ResponseEntity<Integer> number of updated rows,
+     */
+    @PutMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Integer> updateFuel(@RequestBody Fuel fuel){
+        LOGGER.debug("updateFuel({})", fuel);
+        int result = fuelService.update(fuel);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Delete fuel from DB.
+     * @param id fuel id.
+     * @return ResponseEntity<Integer> number iof rows deleted.
+     * */
+    @DeleteMapping(path = "/fuels/{id}", produces = "application/json")
+    public ResponseEntity<Integer> deleteFue(@PathVariable Integer id){
+        LOGGER.debug("Delete({})", id);
+        int result = fuelService.delete(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+//    /**
+//     * Add new Fuel into DB.
+//     * @param fuelName String fuel name.
+//     * @return Integer number of items that was inserted.
+//     */
+//    @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
+//    public Integer add(@RequestBody String fuelName){
+//        LOGGER.debug("add({})", fuelName);
+//        return fuelService.create(
+//                new Fuel()
+//                        .setFuelName(fuelName));
+//    }
+
+
 
 }
