@@ -1,12 +1,25 @@
-package com.epam.brest.courses.service;
+package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Transport;
+import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,27 +27,58 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.brest.courses.constants.TransportConstants.*;
+import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath*:test-db.xml", "classpath*:test-service.xml", "classpath*:dao.xml"})
-public class TransportServiceImplIT {
+@ContextConfiguration(locations = {"classpath:app-context-test.xml"})
+public class TransportControllerIT {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(TransportControllerIT.class);
+
+    public static final String TRANSPORTS_ENDPOINT = "/transports";
+
+    @Autowired
+    private TransportController transportController;
+    @Autowired
+    private CustomExceptionHandler customExceptionHandler;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private MockMvc mockMvc;
+
+    MockMvcTransportService transportService = new MockMvcTransportService();
+
+    @BeforeEach
+    private void before(){
+        mockMvc = MockMvcBuilders.standaloneSetup(transportController)
+                .setMessageConverters(new MappingJackson2HttpMessageConverter())
+                .setControllerAdvice(customExceptionHandler)
+                .alwaysDo(MockMvcResultHandlers.print())
+                .build();
+    }
+
     public static final String datePattern = "yyyy-MM-dd";
     public static final String DATE_FROM = "2020-03-01";
     public static final String DATE_FOR_TRANSPORT2 = "2020-03-02";
     public static final String DATE_TO = "2020-03-08";
 
-    @Autowired
-    private TransportService transportService;
-
     @Test
-    public void shoulFindAllTransports() {
+    public void shoulFindAllTransports() throws Exception {
         List<Transport> transports = transportService.findAll();
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
 
+    /**
+     * Get Date by String.
+     * @param dateAsString String value in date pattern format.
+     * @return Date.
+     */
     private Date getDateByString(String dateAsString) {
         SimpleDateFormat dateformat = new SimpleDateFormat(datePattern);
         try {
@@ -45,7 +89,20 @@ public class TransportServiceImplIT {
     }
 
     @Test
-    public void shouldFindAllTransportsInValueFromToDate() {
+    public void shouldCreateTransport() throws Exception {
+
+        Transport transport = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(getDateWithoutTimeUsingCalendar());
+
+        Integer id = transportService.create(transport);
+        assertNotNull(id);
+    }
+
+    @Test
+    public void shouldFindAllTransportsInValueFromToDate() throws Exception {
         // given
         Date dateFrom = getDateByString(DATE_FROM);
         Transport transport1 = new Transport()
@@ -83,7 +140,7 @@ public class TransportServiceImplIT {
     }
 
     @Test
-    public void shouldFindTransportById() {
+    public void shouldFindTransportById() throws Exception {
 
         // given
         Transport transport = new Transport()
@@ -122,20 +179,7 @@ public class TransportServiceImplIT {
     }
 
     @Test
-    public void shouldCreateTransport() {
-
-        Transport transport = new Transport()
-                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
-                .setFuelId(1)
-                .setTransportTankCapasity(50d)
-                .setTransportDate(getDateWithoutTimeUsingCalendar());
-
-        Integer id = transportService.create(transport);
-        assertNotNull(id);
-    }
-
-    @Test
-    public void shouldUpdateTransport() {
+    public void shouldUpdateTransport() throws Exception {
 
         // given
         Transport transport = new Transport()
@@ -164,7 +208,7 @@ public class TransportServiceImplIT {
     }
 
     @Test
-    public void shouldDeleteTransport() {
+    public void shouldDeleteTransport() throws Exception {
 
         // given
         Transport transport = new Transport()
@@ -187,6 +231,53 @@ public class TransportServiceImplIT {
         List<Transport> currentTransports = transportService.findAll();
         assertNotNull(currentTransports);
         assertEquals(transports.size() - 1, currentTransports.size());
+    }
+
+    class MockMvcTransportService {
+
+        public List<Transport> findAll() throws Exception {
+           LOGGER.debug("findAll()");
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(TRANSPORTS_ENDPOINT)
+                    .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            assertNotNull(response);
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
+        }
+
+        public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
+            return null;
+        }
+
+        public List<Transport> findByFuelId(Integer fuelId) {
+            return null;
+        }
+
+        public Optional<Transport> findById(Integer transportId) {
+            return Optional.empty();
+        }
+
+        public Integer create(Transport transport) throws Exception {
+            LOGGER.debug("create({})", transport);
+            String transportJson = objectMapper.writeValueAsString(transport);
+            MockHttpServletResponse response =
+                    mockMvc.perform(post(TRANSPORTS_ENDPOINT)
+                        .accept(MediaType.APPLICATION_JSON)
+                            .content(transportJson)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
+        }
+
+        public int update(Transport transport) {
+            return 0;
+        }
+
+        public int delete(Integer transportId) {
+            return 0;
+        }
     }
 
 }

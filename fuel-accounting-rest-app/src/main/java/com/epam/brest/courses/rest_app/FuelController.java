@@ -81,20 +81,4 @@ public class FuelController {
         int result = fuelService.delete(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-//    /**
-//     * Add new Fuel into DB.
-//     * @param fuelName String fuel name.
-//     * @return Integer number of items that was inserted.
-//     */
-//    @PostMapping(path = "/fuels", consumes = "application/json", produces = "application/json")
-//    public Integer add(@RequestBody String fuelName){
-//        LOGGER.debug("add({})", fuelName);
-//        return fuelService.create(
-//                new Fuel()
-//                        .setFuelName(fuelName));
-//    }
-
-
-
 }

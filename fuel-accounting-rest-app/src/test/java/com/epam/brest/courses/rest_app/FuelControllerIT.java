@@ -43,7 +43,7 @@ public class FuelControllerIT {
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private MockMvc mockMvc;
 
