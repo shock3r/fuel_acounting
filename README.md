@@ -60,6 +60,11 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
 
 #### delete
     curl --location --request DELETE 'localhost:8088/fuels/3'
+    
+### transports
+
+#### findAll
+    curl --location --request GET 'localhost:8088/transports' | json_pp
 
 ## Start monolite web application using Maven Jetty plugin
  ```
