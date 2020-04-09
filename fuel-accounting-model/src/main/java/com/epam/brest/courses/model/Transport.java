@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class Transport {
     public static final String datePattern = "yyyy-MM-dd";
+    public static final String EUROPE_MINSK = "Europe/Minsk";
     /**
      * Transport Id.
      */
@@ -30,7 +31,7 @@ public class Transport {
      * Transport Date.
      */
     @DateTimeFormat(pattern = datePattern)
-    @JsonFormat(pattern=datePattern)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = datePattern, timezone = EUROPE_MINSK)
     private Date transportDate;
 
     /**

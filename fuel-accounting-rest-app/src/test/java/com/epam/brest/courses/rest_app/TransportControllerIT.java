@@ -3,7 +3,6 @@ package com.epam.brest.courses.rest_app;
 import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
 import com.epam.brest.courses.util.DateUtilites;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -22,11 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(locations = {"classpath:app-context-test.xml"})
 public class TransportControllerIT {
 
+    public static final String EUROPE_MINSK = "Europe/Minsk";
     private static Logger LOGGER = LoggerFactory.getLogger(TransportControllerIT.class);
 
     public static final String TRANSPORTS_ENDPOINT = "/transports";
@@ -56,14 +52,16 @@ public class TransportControllerIT {
 
     @BeforeEach
     private void before(){
+        objectMapper.setTimeZone(TimeZone.getTimeZone(EUROPE_MINSK));
+
         mockMvc = MockMvcBuilders.standaloneSetup(transportController)
                 .setMessageConverters(new MappingJackson2HttpMessageConverter())
                 .setControllerAdvice(customExceptionHandler)
-                .alwaysDo(MockMvcResultHandlers.print())
+                .alwaysDo
+                        (MockMvcResultHandlers.print())
                 .build();
     }
 
-    public static final String datePattern = "yyyy-MM-dd";
     public static final String DATE_FROM = "2020-03-01";
     public static final String DATE_FOR_TRANSPORT2 = "2020-03-02";
     public static final String DATE_TO = "2020-03-08";
@@ -81,7 +79,7 @@ public class TransportControllerIT {
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
                 .setTransportTankCapasity(50d)
-                .setTransportDate(getDateWithoutTimeUsingCalendar());
+                .setTransportDate(DateUtilites.getDateByString("2020-01-01"));
 
         Integer id = transportService.create(transport);
         assertNotNull(id);
