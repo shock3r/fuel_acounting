@@ -2,6 +2,7 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
+import com.epam.brest.courses.util.DateUtilites;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,23 +75,8 @@ public class TransportControllerIT {
         assertTrue(transports.size() > 0);
     }
 
-    /**
-     * Get Date by String.
-     * @param dateAsString String value in date pattern format.
-     * @return Date.
-     */
-    private Date getDateByString(String dateAsString) {
-        SimpleDateFormat dateformat = new SimpleDateFormat(datePattern);
-        try {
-            return dateformat.parse(dateAsString);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
     @Test
     public void shouldCreateTransport() throws Exception {
-
         Transport transport = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
@@ -104,7 +90,7 @@ public class TransportControllerIT {
     @Test
     public void shouldFindAllTransportsInValueFromToDate() throws Exception {
         // given
-        Date dateFrom = getDateByString(DATE_FROM);
+        Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
         Transport transport1 = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
@@ -114,7 +100,7 @@ public class TransportControllerIT {
         Integer id1 = transportService.create(transport1);
         assertNotNull(id1);
 
-        Date dateTransport2 = getDateByString(DATE_FOR_TRANSPORT2);
+        Date dateTransport2 = DateUtilites.getDateByString(DATE_FOR_TRANSPORT2);
         Transport transport2 = new Transport()
                 .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
                 .setFuelId(1)
@@ -123,7 +109,7 @@ public class TransportControllerIT {
 
         Integer id2 = transportService.create(transport2);
         assertNotNull(id2);
-        Date dateTo = getDateByString(DATE_TO);
+        Date dateTo = DateUtilites.getDateByString(DATE_TO);
 
         // when
         List<Transport> transports = transportService.findAllFromDateToDate(dateFrom, dateTo);
@@ -263,7 +249,7 @@ public class TransportControllerIT {
             String transportJson = objectMapper.writeValueAsString(transport);
             MockHttpServletResponse response =
                     mockMvc.perform(post(TRANSPORTS_ENDPOINT)
-                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                             .content(transportJson)
                             .accept(MediaType.APPLICATION_JSON)
                     ).andExpect(status().isOk())
