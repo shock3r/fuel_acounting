@@ -1,5 +1,6 @@
 package com.epam.brest.courses.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -8,6 +9,8 @@ import java.util.Date;
  * POJO Transport for model.
  */
 public class Transport {
+    public static final String datePattern = "yyyy-MM-dd";
+    public static final String EUROPE_MINSK = "Europe/Minsk";
     /**
      * Transport Id.
      */
@@ -27,7 +30,8 @@ public class Transport {
     /**
      * Transport Date.
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = datePattern)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = datePattern, timezone = EUROPE_MINSK)
     private Date transportDate;
 
     /**

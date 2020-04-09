@@ -38,7 +38,6 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
 #### findAll
     curl --location --request GET 'localhost:8088/fuels' | json_pp
 
-
 #### create
     curl --location --request POST 'localhost:8088/fuels/' \
     --header 'Content-Type: application/json' \
@@ -65,6 +64,16 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
 
 #### findAll
     curl --location --request GET 'localhost:8088/transports' | json_pp
+#### create
+    curl --location --request POST 'localhost:8088/transports' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+            "transportId": null,
+            "transportName": "Fiat Punto",
+            "fuelId": 2,
+            "transportTankCapasity": 47.0,
+            "transportDate": "2020-04-10"
+        }'
 
 ## Start monolite web application using Maven Jetty plugin
  ```
