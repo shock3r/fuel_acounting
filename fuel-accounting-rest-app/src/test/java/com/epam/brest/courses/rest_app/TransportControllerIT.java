@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -259,8 +260,14 @@ public class TransportControllerIT {
             return 0;
         }
 
-        public int delete(Integer transportId) {
-            return 0;
+        public int delete(Integer transportId) throws Exception {
+            LOGGER.debug("delete({})", transportId);
+            MockHttpServletResponse response =
+                    mockMvc.perform(MockMvcRequestBuilders.delete(TRANSPORTS_ENDPOINT + "/" + transportId)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
     }
 
