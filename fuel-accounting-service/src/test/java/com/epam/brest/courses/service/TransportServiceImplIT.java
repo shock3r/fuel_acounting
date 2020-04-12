@@ -45,7 +45,7 @@ public class TransportServiceImplIT {
     }
 
     @Test
-    public void shouldFindAllTransportsInValueFromToDate() {
+    public void shouldFindAllTransportsInValueFromDateToDate() {
         // given
         Date dateFrom = getDateByString(DATE_FROM);
         Transport transport1 = new Transport()

@@ -87,7 +87,7 @@ public class TransportControllerIT {
     }
 
     @Test
-    public void shouldFindAllTransportsInValueFromToDate() throws Exception {
+    public void shouldFindAllTransportsInValueFromDateToDate() throws Exception {
         // given
         Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
         Transport transport1 = new Transport()
@@ -231,8 +231,17 @@ public class TransportControllerIT {
             return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
         }
 
-        public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
-            return null;
+        public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) throws Exception {
+            LOGGER.debug("findAllFromDateToDate({}, {})", dateFrom, dateTo);
+            String findTransportFromDateToDateUrl = TRANSPORTS_ENDPOINT
+                    + "/from/" + DateUtilites.getStringByDate(dateFrom)
+                    + "/to/" + DateUtilites.getStringByDate(dateTo);
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(findTransportFromDateToDateUrl)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                            .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
         }
 
         public List<Transport> findByFuelId(Integer fuelId) {

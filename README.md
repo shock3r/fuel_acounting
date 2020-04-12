@@ -46,7 +46,7 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
         "fuelName": "PostmanFuel"
     }'
     
-#### findById(fuelId)
+#### findById
     curl --location --request GET 'localhost:8088/fuel/1'| json_pp
 
 #### update
@@ -74,6 +74,11 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
             "transportTankCapasity": 47.0,
             "transportDate": "2020-04-10"
         }'
+#### findTransportsByDates
+    curl --location --request GET 'localhost:8088/transports/from/2020-01-01/to/2020-04-01' | json_pp
+
+#### delete
+    curl --location --request DELETE 'localhost:8088/transports/1'
 
 ## Start monolite web application using Maven Jetty plugin
  ```

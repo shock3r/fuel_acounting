@@ -4,11 +4,13 @@ import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.service.TransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Transport Rest controller.
@@ -44,6 +46,21 @@ public class TransportController {
         Integer id = transportService.create(transport);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
+
+    /**
+     * Return collection of transport find in dates interval.
+     * @param dateFrom Date.
+     * @param dateTo Date.
+     * @return List<Transport> as Json.
+     */
+    @GetMapping(path = "transports/from/{dateFrom}/to/{dateTo}")
+    public Collection<Transport> findTransportsByDates(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
+                                                       @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo) {
+        LOGGER.debug("findTransportsByDates({}. {})", dateFrom, dateTo);
+       return transportService.findAllFromDateToDate(dateFrom, dateTo);
+
+    }
+
 
     /**
      * Delete Transport by id from DB.
