@@ -4,6 +4,7 @@ import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
 import com.epam.brest.courses.util.DateUtilites;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,23 +19,26 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@Transactional
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:app-context-test.xml"})
 public class TransportControllerIT {
 
     public static final String EUROPE_MINSK = "Europe/Minsk";
+    public static final String datePattern = "yyyy-MM-dd";
     private static Logger LOGGER = LoggerFactory.getLogger(TransportControllerIT.class);
 
     public static final String TRANSPORTS_ENDPOINT = "/transports";
@@ -44,7 +48,7 @@ public class TransportControllerIT {
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
 
@@ -52,7 +56,12 @@ public class TransportControllerIT {
 
     @BeforeEach
     private void before(){
-        objectMapper.setTimeZone(TimeZone.getTimeZone(EUROPE_MINSK));
+        objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new SimpleDateFormat(datePattern));
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES,
+                true);
+//        objectMapper.setTimeZone(TimeZone.getTimeZone(EUROPE_MINSK));
 
         mockMvc = MockMvcBuilders.standaloneSetup(transportController)
                 .setMessageConverters(new MappingJackson2HttpMessageConverter())
@@ -60,6 +69,15 @@ public class TransportControllerIT {
                 .alwaysDo
                         (MockMvcResultHandlers.print())
                 .build();
+    }
+
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES,
+                true);
+        return mapper;
     }
 
     public static final String DATE_FROM = "2020-03-01";
@@ -86,7 +104,7 @@ public class TransportControllerIT {
     }
 
     @Test
-    public void shouldFindAllTransportsInValueFromToDate() throws Exception {
+    public void shouldFindAllTransportsInValueFromDateToDate() throws Exception {
         // given
         Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
         Transport transport1 = new Transport()
@@ -117,8 +135,64 @@ public class TransportControllerIT {
     }
 
     @Test
-    public void shouldFindTransportsByFuilId() {
+    public void shouldFindAllTransportsInValueFromDateToDatePost() throws Exception {
+        // given
+        Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
+        Transport transport1 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateFrom);
+
+        Integer id1 = transportService.create(transport1);
+        assertNotNull(id1);
+
+        Date dateTransport2 = DateUtilites.getDateByString(DATE_FOR_TRANSPORT2);
+        Transport transport2 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateTransport2);
+
+        Integer id2 = transportService.create(transport2);
+        assertNotNull(id2);
+        Date dateTo = DateUtilites.getDateByString(DATE_TO);
+
+        // when
+        List<Transport> transports = transportService.findAllFromDateToDatePost(dateFrom, dateTo);
+        // then
+        assertNotNull(transports);
+        assertTrue(2 == transports.size());
+    }
+
+    @Test
+    public void shouldFindTransportsByFuilId() throws Exception {
+
+        // given
+        Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
+        Transport transport1 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateFrom);
+
+        Integer id1 = transportService.create(transport1);
+        assertNotNull(id1);
+
+        Date dateTransport2 = DateUtilites.getDateByString(DATE_FOR_TRANSPORT2);
+        Transport transport2 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateTransport2);
+
+        Integer id2 = transportService.create(transport2);
+        assertNotNull(id2);
+        Date dateTo = DateUtilites.getDateByString(DATE_TO);
+
+        // when
         List<Transport> transports = transportService.findByFuelId(1);
+        // then
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
@@ -230,16 +304,54 @@ public class TransportControllerIT {
             return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
         }
 
-        public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) {
-            return null;
+        public List<Transport> findAllFromDateToDate(Date dateFrom, Date dateTo) throws Exception {
+            LOGGER.debug("findAllFromDateToDate({}, {})", dateFrom, dateTo);
+            String findTransportFromDateToDateUrl = TRANSPORTS_ENDPOINT
+                    + "/from/" + DateUtilites.getStringByDate(dateFrom)
+                    + "/to/" + DateUtilites.getStringByDate(dateTo);
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(findTransportFromDateToDateUrl)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                            .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
         }
 
-        public List<Transport> findByFuelId(Integer fuelId) {
-            return null;
+        public List<Transport> findAllFromDateToDatePost(Date dateFrom, Date dateTo) throws Exception {
+            LOGGER.debug("findAllFromDateToDatePost({}, {})", dateFrom, dateTo);
+            Map<String, Date> datesMap = new HashMap<>();
+            datesMap.put("dateFrom", dateFrom);
+            datesMap.put("dateTo", dateTo);
+            String datesJson = objectMapper.writeValueAsString(datesMap);
+            MockHttpServletResponse response =
+                    mockMvc.perform(post(TRANSPORTS_ENDPOINT+"/filter")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(datesJson)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
+
         }
 
-        public Optional<Transport> findById(Integer transportId) {
-            return Optional.empty();
+        public List<Transport> findByFuelId(Integer fuelId) throws Exception {
+            LOGGER.debug("findByFuelId({})", fuelId);
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(TRANSPORTS_ENDPOINT + "/fuel/" + fuelId)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
+        }
+
+        public Optional<Transport> findById(Integer transportId) throws Exception {
+            LOGGER.debug("findById({})", transportId);
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(TRANSPORTS_ENDPOINT + "/" + transportId)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return Optional.of(objectMapper.readValue(response.getContentAsString(), Transport.class));
         }
 
         public Integer create(Transport transport) throws Exception {
@@ -255,12 +367,27 @@ public class TransportControllerIT {
             return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
-        public int update(Transport transport) {
-            return 0;
+        public int update(Transport transport) throws Exception {
+            LOGGER.debug("update({})", transport);
+            String updateTransportJson = objectMapper.writeValueAsString(transport);
+            MockHttpServletResponse response =
+                        mockMvc.perform(put(TRANSPORTS_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateTransportJson)
+                        .accept(MediaType.APPLICATION_JSON)
+                        ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
-        public int delete(Integer transportId) {
-            return 0;
+        public int delete(Integer transportId) throws Exception {
+            LOGGER.debug("delete({})", transportId);
+            MockHttpServletResponse response =
+                    mockMvc.perform(MockMvcRequestBuilders.delete(TRANSPORTS_ENDPOINT + "/" + transportId)
+                            .accept(MediaType.APPLICATION_JSON)
+                    ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
     }
 

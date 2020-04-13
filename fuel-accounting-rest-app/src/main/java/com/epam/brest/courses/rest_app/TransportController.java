@@ -1,17 +1,18 @@
 package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Transport;
+import com.epam.brest.courses.rest_app.exception.TransportNotFoundException;
 import com.epam.brest.courses.service.TransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Transport Rest controller.
@@ -48,5 +49,79 @@ public class TransportController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
+    /**
+     * Return collection of transports filtred by dates interval.
+     *
+     * @param dateFrom Date.
+     * @param dateTo Date.
+     * @return List<Transport> as Json.
+     */
+    @GetMapping(path = "/transports/from/{dateFrom}/to/{dateTo}")
+    public Collection<Transport> findTransportsByDates(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
+                                                       @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo) {
+        LOGGER.debug("findTransportsByDates({}. {})", dateFrom, dateTo);
+       return transportService.findAllFromDateToDate(dateFrom, dateTo);
+
+    }
+
+    /**
+     * Return collection of transports filtred by dates interval.
+     *
+     * @param datesJson Map<String, Date> input filter data.
+     * @return List<Transport> as Json.
+     */
+    @PostMapping(value = "/transports/filter", consumes = "application/json", produces = "application/json")
+    public Collection<Transport> findTransportsByDatesfilter(@RequestBody @DateTimeFormat(pattern="yyyy-MM-dd") Map<String, Date> datesJson){ //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE
+        LOGGER.debug("findTransportsByDatesPost({})", datesJson.get("dateFrom"), datesJson.get("dateTo"));
+        return transportService.findAllFromDateToDate(datesJson.get("dateFrom"), datesJson.get("dateTo"));
+    }
+
+    /**
+     * Delete Transport by id from DB.
+     *
+     * @param id transport id.
+     * @return ResponseEntity<Integer> number of deleted rows.
+     */
+    @DeleteMapping(path = "/transports/{id}", produces = "application/json")
+    public ResponseEntity<Integer> deleteTransport(@PathVariable Integer id) {
+        LOGGER.debug("deleteTransport({})", id);
+        int result = transportService.delete(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Get transport by id.
+     * @param id  Integer.
+     * @return Transports as Json.
+     */
+    @GetMapping(path = "transports/{id}")
+    public Transport findById(@PathVariable Integer id){
+        LOGGER.debug("findById({})", id);
+        return transportService.findById(id).orElseThrow(() -> new TransportNotFoundException(id));
+    }
+
+    /**
+     * Find transport by fuel id.
+     * @param fuelId Fuel id.
+     * @return List<Transport> as Json.
+     */
+    @GetMapping(path = "transports/fuel/{fuelId}")
+    public Collection<Transport> findByFuelId(@PathVariable Integer fuelId){
+        LOGGER.debug("findByFuelId({})", fuelId);
+        return transportService.findByFuelId(fuelId);
+    }
+
+    /**
+     * Update transport in DB.
+     *
+     * @param transport Transport with date.
+     * @return ResponseEntity<Integer> number if updated rows.
+     */
+    @PutMapping(path = "transports", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Integer> updateTransport(@RequestBody Transport transport){
+        LOGGER.debug("updateTransport({})", transport);
+        int result = transportService.update(transport);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

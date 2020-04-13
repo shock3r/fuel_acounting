@@ -46,7 +46,7 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
         "fuelName": "PostmanFuel"
     }'
     
-#### findById(fuelId)
+#### findById
     curl --location --request GET 'localhost:8088/fuel/1'| json_pp
 
 #### update
@@ -74,6 +74,28 @@ curl --location --request GET 'localhost:8088/fuel_dtos' | json_pp
             "transportTankCapasity": 47.0,
             "transportDate": "2020-04-10"
         }'
+#### findById
+    curl --location --request GET 'localhost:8088/transports/1' | json_pp
+#### findTransportsByDates
+    curl --location --request GET 'localhost:8088/transports/from/2020-01-01/to/2020-04-01' | json_pp
+#### findTransportsByDatesFilter
+    curl --location --request POST 'localhost:8088/transports/filter' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"dateFrom":"2020-01-01", "dateTo":"2020-04-01"}' | json_pp
+#### findByFuelId
+    curl --location --request GET 'localhost:8088/transports/fuel/2' | json_pp
+#### delete
+    curl --location --request DELETE 'localhost:8088/transports/1'
+#### update
+    curl --location --request PUT 'localhost:8088/transports/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "transportId": 1,
+        "transportName": "VW Passat",
+        "fuelId": 2,
+        "transportTankCapasity": 80.0,
+        "transportDate": "2020-04-13"
+    }'
 
 ## Start monolite web application using Maven Jetty plugin
  ```

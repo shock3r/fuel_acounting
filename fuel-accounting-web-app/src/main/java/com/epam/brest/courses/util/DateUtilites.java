@@ -35,8 +35,7 @@ public class DateUtilites {
     public static String getStringByDate(Date date) {
         String pattern = DATE_PATTERN;
         DateFormat df = new SimpleDateFormat(pattern);
-        Date today = Calendar.getInstance().getTime();
-        return df.format(today);
+        return df.format(date);
     }
 
     /**
