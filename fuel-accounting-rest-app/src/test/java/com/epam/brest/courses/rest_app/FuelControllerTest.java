@@ -80,10 +80,11 @@ public class FuelControllerTest {
         Exception exception = assertThrows(NestedServletException.class, () -> {
             mockMvc.perform(
                     MockMvcRequestBuilders.get("/fuels/99")).andDo(MockMvcResultHandlers.print())
-                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                     .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"));
         });
-        String expectedMessage = "Fuel is not found";
+
+        String expectedMessage = "Fuel not found for id";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }

@@ -2,6 +2,7 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Transport;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
+import com.epam.brest.courses.rest_app.exception.ErrorResponse;
 import com.epam.brest.courses.util.DateUtilites;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -27,7 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
 import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
+import static com.epam.brest.courses.rest_app.exception.CustomExceptionHandler.TRANSPORT_NOT_FOUND;
+import static com.epam.brest.courses.rest_app.exception.CustomExceptionHandler.VALIDATION_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -289,6 +293,49 @@ public class TransportControllerIT {
         List<Transport> currentTransports = transportService.findAll();
         assertNotNull(currentTransports);
         assertEquals(transports.size() - 1, currentTransports.size());
+    }
+
+    @Test
+    public void shouldReturnTransportNotFoundError() throws Exception {
+        LOGGER.debug("shouldReturnFuelNotFoundError()");
+        MockHttpServletResponse response =
+                mockMvc.perform(MockMvcRequestBuilders.get(TRANSPORTS_ENDPOINT + "/99999")
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNotFound())
+                        .andReturn().getResponse();
+        assertNotNull(response);
+        ErrorResponse errorResponse = objectMapper.readValue(response.getContentAsString(), ErrorResponse.class);
+        assertNotNull(errorResponse);
+        assertEquals(errorResponse.getMessage(), TRANSPORT_NOT_FOUND);
+    }
+
+    @Test void shouldFailOnCreateTransportWithDuplicateName() throws Exception {
+        Transport transport1 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportDate(DateUtilites.getMonthStartDate())
+                .setTransportTankCapasity(50d);
+        Integer id = transportService.create(transport1);
+        assertNotNull(id);
+
+        Transport transport2 = new Transport()
+                .setTransportName(transport1.getTransportName())
+                .setFuelId(2)
+                .setTransportDate(DateUtilites.getMonthEndDate())
+                .setTransportTankCapasity(59d);
+
+        MockHttpServletResponse response =
+                mockMvc.perform(post(TRANSPORTS_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transport2))
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isUnprocessableEntity())
+                        .andReturn().getResponse();
+
+        assertNotNull(response);
+        ErrorResponse errorResponse = objectMapper.readValue(response.getContentAsString(), ErrorResponse.class);
+        assertNotNull(errorResponse);
+        assertEquals(errorResponse.getMessage(), VALIDATION_ERROR);
     }
 
     class MockMvcTransportService {

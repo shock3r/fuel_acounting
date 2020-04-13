@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "bd3f74ff-b442-439f-b7d6-3fe7f8ea4250",
+		"name": "fuel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Version",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuels.findAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuels.findAllDtos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuels.findById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuel.create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fuelId\": null,\n    \"fuelName\": \"PostmanFuel\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8088/fuels/",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"fuels",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuel.update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fuelId\": 1,\n    \"fuelName\": \"AI95\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8088/fuels/",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"fuels",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fuel.delete",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.findall",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"transportId\": null,\n        \"transportName\": \"Fiat Punto\",\n        \"fuelId\": 2,\n        \"transportTankCapasity\": 47.0,\n        \"transportDate\": \"2020-04-10\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8088/transports",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"transports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.findFromDateToDate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.findFromDateToDateFilter",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"dateTo\":\"2020-04-01\",\"dateFrom\":\"2020-01-01\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8088/transports/filter",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"transports",
+						"filter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.delete",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.findById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8088/transports/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"transports",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.findByFuelId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8088/transports/fuel/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"transports",
+						"fuel",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transport.update",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

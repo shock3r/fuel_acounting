@@ -2,6 +2,7 @@ package com.epam.brest.courses.dao;
 
 import com.epam.brest.courses.model.Transport;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,33 @@ public class TransportDaoJdbcIT {
 
         Integer id = transportDao.create(transport);
         assertNotNull(id);
+    }
+
+    @Test
+    public void shouldNotCreateTransportWithTheSameName(){
+        // given
+        String transportName = RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE);
+        Transport transport1 = new Transport()
+                .setTransportName(transportName)
+                .setFuelId(1)
+                .setTransportTankCapasity(40d)
+                .setTransportDate(new Date());
+        Integer firstId = transportDao.create(transport1);
+        assertNotNull(firstId);
+
+        Optional<Transport> firstTransportOptional = transportDao.findById(firstId);
+        assertTrue(firstTransportOptional.isPresent());
+
+        // when
+        Transport transport2 = new Transport()
+                .setTransportName(transportName)
+                .setFuelId(2)
+                .setTransportTankCapasity(40d)
+                .setTransportDate(new Date());
+
+        // then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> transportDao.create(transport2));
+
     }
 
     @Test

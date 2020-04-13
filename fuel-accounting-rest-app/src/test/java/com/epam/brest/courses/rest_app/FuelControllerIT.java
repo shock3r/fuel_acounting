@@ -2,6 +2,7 @@ package com.epam.brest.courses.rest_app;
 
 import com.epam.brest.courses.model.Fuel;
 import com.epam.brest.courses.rest_app.exception.CustomExceptionHandler;
+import com.epam.brest.courses.rest_app.exception.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epam.brest.courses.constants.FuelConstants.FUEL_NAME_SIZE;
+import static com.epam.brest.courses.rest_app.exception.CustomExceptionHandler.FUEL_NOT_FOUND;
+import static com.epam.brest.courses.rest_app.exception.CustomExceptionHandler.VALIDATION_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -136,6 +139,43 @@ public class FuelControllerIT {
         assertNotNull(currentFuels);
 
         assertTrue(fuels.size() - 1 == currentFuels.size());
+    }
+
+    @Test
+    public void shouldReturnFuelNotFoundError() throws Exception {
+        LOGGER.debug("shouldReturnFuelNotFoundError()");
+        MockHttpServletResponse response =
+                mockMvc.perform(MockMvcRequestBuilders.get(FUELS_ENDPOINT + "/99999")
+                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNotFound())
+                    .andReturn().getResponse();
+        assertNotNull(response);
+        ErrorResponse errorResponse = objectMapper.readValue(response.getContentAsString(), ErrorResponse.class);
+        assertNotNull(errorResponse);
+        assertEquals(errorResponse.getMessage(), FUEL_NOT_FOUND);
+    }
+
+    @Test void shouldFailOnCreateFuelWithDuplicateName() throws Exception {
+        Fuel fuel1 = new Fuel()
+                .setFuelName(RandomStringUtils.randomAlphabetic(FUEL_NAME_SIZE));
+        Integer id = fuelService.create(fuel1);
+        assertNotNull(id);
+
+        Fuel fuel2 = new Fuel()
+                .setFuelName(fuel1.getFuelName());
+
+        MockHttpServletResponse response =
+                mockMvc.perform(post(FUELS_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(fuel2))
+                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isUnprocessableEntity())
+                .andReturn().getResponse();
+
+        assertNotNull(response);
+        ErrorResponse errorResponse = objectMapper.readValue(response.getContentAsString(), ErrorResponse.class);
+        assertNotNull(errorResponse);
+        assertEquals(errorResponse.getMessage(), VALIDATION_ERROR);
     }
 
     class MockMvcFuelService {
