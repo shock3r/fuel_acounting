@@ -100,5 +100,28 @@ public class TransportController {
         return transportService.findById(id).orElseThrow(() -> new TransportNotFoundException(id));
     }
 
+    /**
+     * Find transport by fuel id.
+     * @param fuelId Fuel id.
+     * @return List<Transport> as Json.
+     */
+    @GetMapping(path = "transports/fuel/{fuelId}")
+    public Collection<Transport> findByFuelId(@PathVariable Integer fuelId){
+        LOGGER.debug("findByFuelId({})", fuelId);
+        return transportService.findByFuelId(fuelId);
+    }
+
+    /**
+     * Update transport in DB.
+     *
+     * @param transport Transport with date.
+     * @return ResponseEntity<Integer> number if updated rows.
+     */
+    @PutMapping(path = "transports", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Integer> updateTransport(@RequestBody Transport transport){
+        LOGGER.debug("updateTransport({})", transport);
+        int result = transportService.update(transport);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

@@ -29,8 +29,7 @@ import java.util.*;
 
 import static com.epam.brest.courses.constants.TransportConstants.TRANSPORT_NAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -167,8 +166,33 @@ public class TransportControllerIT {
     }
 
     @Test
-    public void shouldFindTransportsByFuilId() {
+    public void shouldFindTransportsByFuilId() throws Exception {
+
+        // given
+        Date dateFrom = DateUtilites.getDateByString(DATE_FROM);
+        Transport transport1 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateFrom);
+
+        Integer id1 = transportService.create(transport1);
+        assertNotNull(id1);
+
+        Date dateTransport2 = DateUtilites.getDateByString(DATE_FOR_TRANSPORT2);
+        Transport transport2 = new Transport()
+                .setTransportName(RandomStringUtils.randomAlphabetic(TRANSPORT_NAME_SIZE))
+                .setFuelId(1)
+                .setTransportTankCapasity(50d)
+                .setTransportDate(dateTransport2);
+
+        Integer id2 = transportService.create(transport2);
+        assertNotNull(id2);
+        Date dateTo = DateUtilites.getDateByString(DATE_TO);
+
+        // when
         List<Transport> transports = transportService.findByFuelId(1);
+        // then
         assertNotNull(transports);
         assertTrue(transports.size() > 0);
     }
@@ -310,8 +334,14 @@ public class TransportControllerIT {
 
         }
 
-        public List<Transport> findByFuelId(Integer fuelId) {
-            return null;
+        public List<Transport> findByFuelId(Integer fuelId) throws Exception {
+            LOGGER.debug("findByFuelId({})", fuelId);
+            MockHttpServletResponse response =
+                    mockMvc.perform(get(TRANSPORTS_ENDPOINT + "/fuel/" + fuelId)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<Transport>>() {});
         }
 
         public Optional<Transport> findById(Integer transportId) throws Exception {
@@ -337,8 +367,17 @@ public class TransportControllerIT {
             return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
-        public int update(Transport transport) {
-            return 0;
+        public int update(Transport transport) throws Exception {
+            LOGGER.debug("update({})", transport);
+            String updateTransportJson = objectMapper.writeValueAsString(transport);
+            MockHttpServletResponse response =
+                        mockMvc.perform(put(TRANSPORTS_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateTransportJson)
+                        .accept(MediaType.APPLICATION_JSON)
+                        ).andExpect(status().isOk())
+                    .andReturn().getResponse();
+            return objectMapper.readValue(response.getContentAsString(), Integer.class);
         }
 
         public int delete(Integer transportId) throws Exception {
