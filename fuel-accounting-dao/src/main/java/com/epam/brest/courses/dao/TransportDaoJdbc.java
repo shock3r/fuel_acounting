@@ -42,6 +42,8 @@ public class TransportDaoJdbc implements TransportDao {
     private String updateSql;
     @Value("${transport.delete}")
     private String deleteSql;
+    @Value("${transport.findCountByName}")
+    private String findCountByNameSql;
 
     public TransportDaoJdbc(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -85,6 +87,9 @@ public class TransportDaoJdbc implements TransportDao {
     public Integer create(Transport transport) {
 
         LOGGER.debug("create(transport:{})", transport);
+        if (!isNameUnique(transport)) {
+            throw new IllegalArgumentException("transport with same name already exits in DB.");
+        }
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue(TRANSPORT_NAME, transport.getTransportName());
         parameters.addValue(TRANSPORT_FUEL_ID, transport.getFuelId());
@@ -94,6 +99,19 @@ public class TransportDaoJdbc implements TransportDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(createSql, parameters, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
+    }
+
+    /**
+     * Find count of transport name in table transports.
+     * @param transport Transport.
+     * @return numbers of rows find in table transports.
+     */
+    @SuppressWarnings("ConstantConditions")
+    private boolean isNameUnique(Transport transport) {
+        LOGGER.debug("isNameUnique({})", transport);
+        return namedParameterJdbcTemplate.queryForObject(findCountByNameSql,
+                new MapSqlParameterSource(TRANSPORT_NAME, transport.getTransportName()),
+                Integer.class) == 0;
     }
 
     @Override

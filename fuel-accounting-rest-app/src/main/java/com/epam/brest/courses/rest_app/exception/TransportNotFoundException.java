@@ -5,6 +5,6 @@ package com.epam.brest.courses.rest_app.exception;
  */
 public class TransportNotFoundException extends RuntimeException {
     public TransportNotFoundException(Integer transportId){
-        super("Transport is not found: " + transportId);
+        super("Transport not found for id: " + transportId);
     }
 }

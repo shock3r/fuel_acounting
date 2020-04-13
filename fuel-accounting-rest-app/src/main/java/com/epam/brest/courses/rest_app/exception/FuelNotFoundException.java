@@ -5,6 +5,6 @@ package com.epam.brest.courses.rest_app.exception;
  */
 public class FuelNotFoundException extends RuntimeException {
     public FuelNotFoundException(Integer fuelId){
-        super("Fuel is not found: " + fuelId);
+        super("Fuel not found for id: " + fuelId);
     }
 }

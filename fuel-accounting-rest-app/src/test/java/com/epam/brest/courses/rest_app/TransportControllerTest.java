@@ -55,7 +55,7 @@ public class TransportControllerTest {
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"));
         });
-        String expectedMessage = "Transport is not found";
+        String expectedMessage = "Transport not found for id";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
